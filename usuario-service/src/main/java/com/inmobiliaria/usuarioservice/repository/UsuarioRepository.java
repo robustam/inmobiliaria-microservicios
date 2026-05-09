@@ -5,7 +5,7 @@ import com.inmobiliaria.usuarioservice.model.Usuario;
 import java.util.Optional;
 
 
-public interface UsuarioRepository extends  JpaRepository<Usuario,long>{
+public interface UsuarioRepository extends  JpaRepository<Usuario,Long>{
 
      //busca usuario por rut
     Optional<Usuario>  findByEmail(String email);
