@@ -23,9 +23,9 @@ public class RegisterRequest {
     @NotBlank(message = "el password es obligatorio")
     private String password;
 
-    @NotNull(message = "El rol es obligatorio")
-    private Usuario.Rol rol;
-
+    // Dentro de RegisterRequest.java
+    @NotBlank(message = "El rol es obligatorio")
+    private String rol; // Ahora es String. Jackson y el Gateway lo leerán sin colapsar.
 
 
 }

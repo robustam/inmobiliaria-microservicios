@@ -65,7 +65,8 @@ public class AuthService {
             // Encripta el password antes de guardar
             usuario.setPassword(
                     passwordEncoder.encode(request.getPassword()));
-            usuario.setRol(request.getRol());
+            // LÍNEA CORRECTA (Reemplázala aquí):
+            usuario.setRol(Usuario.Rol.valueOf(request.getRol().toUpperCase()));
             usuario.setActivo(true);
 
             // Guarda en MySQL

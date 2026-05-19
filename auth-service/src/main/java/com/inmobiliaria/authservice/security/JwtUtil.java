@@ -25,9 +25,10 @@ public class JwtUtil {
     private String secret;
 
 
-    @Value("${jwt.expiration}")
-    private Long expiration;
 
+    // Si jwt.expiration no existe o no se lee, por defecto usará 86400000 ms (24 horas)
+    @Value("${jwt.expiration:86400000}")
+    private Long expiration;
 
     private Key getKey() {
         return Keys.hmacShaKeyFor(secret.getBytes());
