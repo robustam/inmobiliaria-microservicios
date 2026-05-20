@@ -59,7 +59,7 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
 
 jwt:
-  secret: unaClaveSecretaMuyLargaParaQueSeaSegura123456
+  secret: 123456
 
 logging:
   level:
