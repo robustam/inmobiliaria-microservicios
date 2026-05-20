@@ -1,0 +1,66 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      mvc:
+        routes:
+          - id: auth-service
+            uri: lb://auth-service
+            predicates:
+              - Path=/api/v1/auth/**
+
+          - id: usuario-service
+            uri: lb://usuario-service
+            predicates:
+              - Path=/api/v1/usuarios/**
+
+          - id: propiedad-service
+            uri: lb://propiedad-service
+            predicates:
+              - Path=/api/v1/propiedades/**
+
+          - id: reserva-service
+            uri: lb://reserva-service
+            predicates:
+              - Path=/api/v1/reservas/**
+
+          - id: resena-service
+            uri: lb://resena-service
+            predicates:
+              - Path=/api/v1/resenas/**
+
+          - id: busqueda-service
+            uri: lb://busqueda-service
+            predicates:
+              - Path=/api/v1/busqueda/**
+
+          - id: notificacion-service
+            uri: lb://notificacion-service
+            predicates:
+              - Path=/api/v1/notificaciones/**
+
+          - id: imagen-service
+            uri: lb://imagen-service
+            predicates:
+              - Path=/api/v1/imagenes/**
+
+          - id: reporte-service
+            uri: lb://reporte-service
+            predicates:
+              - Path=/api/v1/reportes/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+jwt:
+  secret: unaClaveSecretaMuyLargaParaQueSeaSegura123456
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
