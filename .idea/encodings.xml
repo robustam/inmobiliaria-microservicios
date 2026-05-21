@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/api-gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/auth-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/busqueda-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/imagen-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/notificacion-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/propiedad-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/reporte-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/resena-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/reserva-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/server_eureka/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/usuario-service/src/main/java" charset="UTF-8" />
+  </component>
+</project>

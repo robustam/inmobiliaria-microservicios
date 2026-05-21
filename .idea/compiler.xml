@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="reserva-service" />
+        <module name="usuario-service" />
+        <module name="busqueda-service" />
+        <module name="propiedad-service" />
+        <module name="resena-service" />
+        <module name="imagen-service" />
+        <module name="notificacion-service" />
+        <module name="api-gateway" />
+        <module name="server_eureka" />
+        <module name="reporte-service" />
+      </profile>
+      <profile name="Annotation profile for inmobiliaria-microservicios-parent" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.44/lombok-1.18.44.jar" />
+        </processorPath>
+        <module name="auth-service" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="api-gateway" options="-parameters" />
+      <module name="auth-service" options="-parameters" />
+      <module name="busqueda-service" options="-parameters" />
+      <module name="imagen-service" options="-parameters" />
+      <module name="notificacion-service" options="-parameters" />
+      <module name="propiedad-service" options="-parameters" />
+      <module name="reporte-service" options="-parameters" />
+      <module name="resena-service" options="-parameters" />
+      <module name="reserva-service" options="-parameters" />
+      <module name="server_eureka" options="-parameters" />
+      <module name="usuario-service" options="-parameters" />
+    </option>
+  </component>
+</project>
