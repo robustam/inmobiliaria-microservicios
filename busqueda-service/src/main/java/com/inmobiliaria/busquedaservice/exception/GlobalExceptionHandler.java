@@ -1,0 +1,51 @@
+package com.inmobiliaria.busquedaservice.exception;
+
+// ============================================================
+// MANEJADOR GLOBAL DE EXCEPCIONES - BÚSQUEDA SERVICE
+// ============================================================
+// Intercepta excepciones de los Controllers y retorna JSON estructurado.
+// busqueda-service no tiene BD propia, pero puede recibir errores de Feign.
+// ============================================================
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    // RecursoNoEncontradoException → HTTP 404
+    @ExceptionHandler(RecursoNoEncontradoException.class)
+    public ResponseEntity<Map<String, Object>> handleNotFound(RecursoNoEncontradoException e) {
+        return ResponseEntity.status(404).body(errorBody("NOT_FOUND", e.getMessage()));
+    }
+
+    // NegocioException → HTTP 400
+    @ExceptionHandler(NegocioException.class)
+    public ResponseEntity<Map<String, Object>> handleNegocio(NegocioException e) {
+        return ResponseEntity.status(400).body(errorBody("BAD_REQUEST", e.getMessage()));
+    }
+
+    // MethodArgumentNotValidException → HTTP 400 (falla de @Valid)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException e) {
+        String mensaje = e.getBindingResult().getFieldErrors().stream()
+                .map(fe -> fe.getField() + ": " + fe.getDefaultMessage())
+                .collect(Collectors.joining(", "));
+        return ResponseEntity.status(400).body(errorBody("VALIDATION_ERROR", mensaje));
+    }
+
+    // Exception.class → HTTP 500 (error inesperado, incluye errores de Feign si no se maneja)
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, Object>> handleGeneral(Exception e) {
+        return ResponseEntity.status(500).body(errorBody("SERVER_ERROR", "Error interno del servidor"));
+    }
+
+    private Map<String, Object> errorBody(String codigo, String mensaje) {
+        return Map.of("codigo", codigo, "mensaje", mensaje, "timestamp", LocalDateTime.now().toString());
+    }
+}

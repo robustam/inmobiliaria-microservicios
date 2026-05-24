@@ -1,0 +1,651 @@
+{
+  "info": {
+    "name": "Inmobiliaria Microservicios",
+    "description": "Colección completa de endpoints para el sistema de microservicios inmobiliaria.\nBase URL: http://localhost:8080 (API Gateway)\n\nFlujo recomendado:\n1. Auth → Register / Login  (guarda el token automáticamente)\n2. Propiedad → Crear propiedad\n3. Reserva → Crear reserva\n4. Reseña → Crear reseña\n5. Reporte → Ver resumen general",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080", "type": "string" },
+    { "key": "token",   "value": "",                      "type": "string" },
+    { "key": "usuarioId",    "value": "1", "type": "string" },
+    { "key": "propiedadId",  "value": "1", "type": "string" },
+    { "key": "reservaId",    "value": "1", "type": "string" },
+    { "key": "resenaId",     "value": "1", "type": "string" },
+    { "key": "imagenId",     "value": "1", "type": "string" },
+    { "key": "notificacionId","value": "1","type": "string" },
+    { "key": "reporteId",    "value": "1", "type": "string" }
+  ],
+  "item": [
+
+    {
+      "name": "🔐 Auth Service",
+      "item": [
+        {
+          "name": "Health",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/health" }
+          }
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/register" },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"juan\",\n  \"email\": \"juan@example.com\",\n  \"password\": \"Password123!\",\n  \"nombre\": \"Juan García\",\n  \"role\": \"USER\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register (Propietario)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/register" },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"propietario1\",\n  \"email\": \"prop@example.com\",\n  \"password\": \"Password123!\",\n  \"nombre\": \"Carlos López\",\n  \"role\": \"PROPIETARIO\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/register" },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"email\": \"admin@inmobiliaria.com\",\n  \"password\": \"Admin1234!\",\n  \"nombre\": \"Administrador\",\n  \"role\": \"ADMIN\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login ★ (guarda token automáticamente)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.token) {",
+                  "    pm.collectionVariables.set('token', json.token);",
+                  "    console.log('Token guardado:', json.token);",
+                  "    pm.test('Login exitoso', () => pm.response.to.have.status(200));",
+                  "} else {",
+                  "    pm.test('Login fallido', () => { throw new Error(json.message); });",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/auth/login" },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"juan\",\n  \"password\": \"Password123!\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Validar Token",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/validate?token={{token}}"
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "👤 Usuario Service",
+      "item": [
+        {
+          "name": "Health",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/usuarios/health" } }
+        },
+        {
+          "name": "Listar Usuarios",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/usuarios" } }
+        },
+        {
+          "name": "Obtener por ID",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/usuarios/{{usuarioId}}" } }
+        },
+        {
+          "name": "Obtener por Email",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/usuarios/email/juan@example.com" } }
+        },
+        {
+          "name": "Obtener por Ciudad",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/usuarios/ciudad/Bogotá" } }
+        },
+        {
+          "name": "Crear Usuario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('usuarioId', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/usuarios" },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"García\",\n  \"email\": \"juan@example.com\",\n  \"telefono\": \"+57 300 1234567\",\n  \"direccion\": \"Calle 10 #5-20\",\n  \"ciudad\": \"Bogotá\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Actualizar Usuario",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/usuarios/{{usuarioId}}" },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Juan\",\n  \"apellido\": \"García Actualizado\",\n  \"telefono\": \"+57 310 9876543\",\n  \"ciudad\": \"Medellín\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Eliminar Usuario",
+          "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/usuarios/{{usuarioId}}" } }
+        }
+      ]
+    },
+
+    {
+      "name": "🏠 Propiedad Service",
+      "item": [
+        {
+          "name": "Health",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/propiedades/health" } }
+        },
+        {
+          "name": "Listar Disponibles",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/propiedades" } }
+        },
+        {
+          "name": "Listar Todas",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/propiedades/todas" } }
+        },
+        {
+          "name": "Obtener por ID",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/propiedades/{{propiedadId}}" } }
+        },
+        {
+          "name": "Buscar (filtros)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/propiedades/buscar?ciudad=Bogotá&tipo=ALQUILER&precioMin=500000&precioMax=3000000",
+              "query": [
+                { "key": "ciudad",    "value": "Bogotá" },
+                { "key": "tipo",      "value": "ALQUILER" },
+                { "key": "precioMin", "value": "500000" },
+                { "key": "precioMax", "value": "3000000" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Propiedades del Propietario",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/propiedades/propietario/1" } }
+        },
+        {
+          "name": "Crear Propiedad (Alquiler)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('propiedadId', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/propiedades" },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Apartamento moderno en el centro\",\n  \"descripcion\": \"Hermoso apartamento con vista a la ciudad, completamente amoblado.\",\n  \"precio\": 1800000,\n  \"direccion\": \"Calle 72 #10-35, Piso 8\",\n  \"ciudad\": \"Bogotá\",\n  \"pais\": \"Colombia\",\n  \"habitaciones\": 3,\n  \"banos\": 2,\n  \"metrosCuadrados\": 85.5,\n  \"tipo\": \"ALQUILER\",\n  \"propietarioId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Crear Propiedad (Venta)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/propiedades" },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Casa campestre con piscina\",\n  \"descripcion\": \"Espectacular casa en conjunto cerrado, piscina, cancha y zonas verdes.\",\n  \"precio\": 450000000,\n  \"direccion\": \"Km 5 Vía La Calera\",\n  \"ciudad\": \"Bogotá\",\n  \"pais\": \"Colombia\",\n  \"habitaciones\": 5,\n  \"banos\": 4,\n  \"metrosCuadrados\": 320.0,\n  \"tipo\": \"VENTA\",\n  \"propietarioId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Actualizar Propiedad",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/propiedades/{{propiedadId}}" },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Apartamento moderno - ACTUALIZADO\",\n  \"descripcion\": \"Descripción actualizada.\",\n  \"precio\": 1950000,\n  \"direccion\": \"Calle 72 #10-35, Piso 9\",\n  \"ciudad\": \"Bogotá\",\n  \"pais\": \"Colombia\",\n  \"habitaciones\": 3,\n  \"banos\": 2,\n  \"metrosCuadrados\": 90.0,\n  \"tipo\": \"ALQUILER\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Cambiar Estado → DISPONIBLE",
+          "request": {
+            "method": "PATCH",
+            "url": { "raw": "{{baseUrl}}/api/v1/propiedades/{{propiedadId}}/estado?estado=DISPONIBLE" }
+          }
+        },
+        {
+          "name": "Cambiar Estado → INACTIVA",
+          "request": {
+            "method": "PATCH",
+            "url": { "raw": "{{baseUrl}}/api/v1/propiedades/{{propiedadId}}/estado?estado=INACTIVA" }
+          }
+        },
+        {
+          "name": "Eliminar Propiedad",
+          "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/propiedades/{{propiedadId}}" } }
+        }
+      ]
+    },
+
+    {
+      "name": "📅 Reserva Service",
+      "item": [
+        {
+          "name": "Health",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/reservas/health" } }
+        },
+        {
+          "name": "Listar Reservas",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/reservas" } }
+        },
+        {
+          "name": "Obtener por ID",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/reservas/{{reservaId}}" } }
+        },
+        {
+          "name": "Reservas del Usuario",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/reservas/usuario/{{usuarioId}}" } }
+        },
+        {
+          "name": "Reservas de la Propiedad",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/reservas/propiedad/{{propiedadId}}" } }
+        },
+        {
+          "name": "Crear Reserva",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('reservaId', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/reservas" },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propiedadId\": {{propiedadId}},\n  \"usuarioId\": {{usuarioId}},\n  \"fechaInicio\": \"2025-07-01\",\n  \"fechaFin\": \"2025-07-31\",\n  \"comentario\": \"Me interesa el apartamento para el mes de julio.\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Confirmar Reserva",
+          "request": {
+            "method": "PATCH",
+            "url": { "raw": "{{baseUrl}}/api/v1/reservas/{{reservaId}}/estado?estado=CONFIRMADA" }
+          }
+        },
+        {
+          "name": "Completar Reserva",
+          "request": {
+            "method": "PATCH",
+            "url": { "raw": "{{baseUrl}}/api/v1/reservas/{{reservaId}}/estado?estado=COMPLETADA" }
+          }
+        },
+        {
+          "name": "Cancelar Reserva",
+          "request": {
+            "method": "PATCH",
+            "url": { "raw": "{{baseUrl}}/api/v1/reservas/{{reservaId}}/estado?estado=CANCELADA" }
+          }
+        },
+        {
+          "name": "Eliminar Reserva",
+          "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/reservas/{{reservaId}}" } }
+        }
+      ]
+    },
+
+    {
+      "name": "⭐ Reseña Service",
+      "item": [
+        {
+          "name": "Health",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/resenas/health" } }
+        },
+        {
+          "name": "Listar Reseñas",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/resenas" } }
+        },
+        {
+          "name": "Obtener por ID",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/resenas/{{resenaId}}" } }
+        },
+        {
+          "name": "Reseñas de la Propiedad",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/resenas/propiedad/{{propiedadId}}" } }
+        },
+        {
+          "name": "Estadísticas de la Propiedad",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/resenas/propiedad/{{propiedadId}}/estadisticas" } }
+        },
+        {
+          "name": "Reseñas del Usuario",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/resenas/usuario/{{usuarioId}}" } }
+        },
+        {
+          "name": "Crear Reseña",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('resenaId', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/resenas" },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propiedadId\": {{propiedadId}},\n  \"usuarioId\": {{usuarioId}},\n  \"nombreUsuario\": \"Juan García\",\n  \"calificacion\": 5,\n  \"comentario\": \"Excelente propiedad, muy bien ubicada y cómoda. Totalmente recomendada.\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Actualizar Reseña",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/resenas/{{resenaId}}" },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"calificacion\": 4,\n  \"comentario\": \"Muy buena propiedad, actualizo mi opinión.\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Eliminar Reseña",
+          "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/resenas/{{resenaId}}" } }
+        }
+      ]
+    },
+
+    {
+      "name": "🔍 Búsqueda Service",
+      "item": [
+        {
+          "name": "Health",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/busqueda/health" } }
+        },
+        {
+          "name": "Buscar con filtros",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/busqueda?ciudad=Bogotá&tipo=ALQUILER&precioMin=500000&precioMax=3000000&habitacionesMin=2&metrosMin=50",
+              "query": [
+                { "key": "ciudad",          "value": "Bogotá" },
+                { "key": "tipo",            "value": "ALQUILER" },
+                { "key": "precioMin",       "value": "500000" },
+                { "key": "precioMax",       "value": "3000000" },
+                { "key": "habitacionesMin", "value": "2" },
+                { "key": "metrosMin",       "value": "50" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Propiedades Disponibles",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/busqueda/disponibles" } }
+        },
+        {
+          "name": "Propiedades Destacadas (top 10)",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/busqueda/destacadas" } }
+        }
+      ]
+    },
+
+    {
+      "name": "🔔 Notificación Service",
+      "item": [
+        {
+          "name": "Health",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/notificaciones/health" } }
+        },
+        {
+          "name": "Notificaciones del Usuario",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/notificaciones?usuarioId={{usuarioId}}" } }
+        },
+        {
+          "name": "Notificaciones No Leídas",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/notificaciones/no-leidas?usuarioId={{usuarioId}}" } }
+        },
+        {
+          "name": "Resumen (contador)",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/notificaciones/resumen?usuarioId={{usuarioId}}" } }
+        },
+        {
+          "name": "Obtener por ID",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/notificaciones/{{notificacionId}}" } }
+        },
+        {
+          "name": "Crear Notificación",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('notificacionId', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/notificaciones" },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuarioId\": {{usuarioId}},\n  \"titulo\": \"Reserva confirmada\",\n  \"mensaje\": \"Tu reserva para el apartamento ha sido confirmada exitosamente.\",\n  \"tipo\": \"RESERVA\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Marcar como Leída",
+          "request": {
+            "method": "PATCH",
+            "url": { "raw": "{{baseUrl}}/api/v1/notificaciones/{{notificacionId}}/leer" }
+          }
+        },
+        {
+          "name": "Marcar Todas como Leídas",
+          "request": {
+            "method": "PATCH",
+            "url": { "raw": "{{baseUrl}}/api/v1/notificaciones/leer-todas?usuarioId={{usuarioId}}" }
+          }
+        },
+        {
+          "name": "Eliminar Notificación",
+          "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/notificaciones/{{notificacionId}}" } }
+        }
+      ]
+    },
+
+    {
+      "name": "🖼️ Imagen Service",
+      "item": [
+        {
+          "name": "Health",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/imagenes/health" } }
+        },
+        {
+          "name": "Listar Todas",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/imagenes" } }
+        },
+        {
+          "name": "Obtener por ID",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/imagenes/{{imagenId}}" } }
+        },
+        {
+          "name": "Imágenes de la Propiedad",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/imagenes/propiedad/{{propiedadId}}" } }
+        },
+        {
+          "name": "Imagen Principal de la Propiedad",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/imagenes/propiedad/{{propiedadId}}/principal" } }
+        },
+        {
+          "name": "Agregar Imagen",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "if (json.id) pm.collectionVariables.set('imagenId', json.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/imagenes" },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propiedadId\": {{propiedadId}},\n  \"url\": \"https://example.com/imagenes/apartamento-sala.jpg\",\n  \"nombre\": \"Sala principal\",\n  \"tipoMime\": \"image/jpeg\",\n  \"tamanioBytes\": 204800,\n  \"principal\": true,\n  \"descripcion\": \"Vista de la sala principal del apartamento\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Agregar Imagen Secundaria",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/v1/imagenes" },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propiedadId\": {{propiedadId}},\n  \"url\": \"https://example.com/imagenes/apartamento-cocina.jpg\",\n  \"nombre\": \"Cocina\",\n  \"tipoMime\": \"image/jpeg\",\n  \"tamanioBytes\": 153600,\n  \"principal\": false,\n  \"descripcion\": \"Cocina integral completamente equipada\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Establecer como Principal",
+          "request": {
+            "method": "PATCH",
+            "url": { "raw": "{{baseUrl}}/api/v1/imagenes/{{imagenId}}/principal" }
+          }
+        },
+        {
+          "name": "Eliminar Imagen",
+          "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/imagenes/{{imagenId}}" } }
+        },
+        {
+          "name": "Eliminar Imágenes de Propiedad",
+          "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/imagenes/propiedad/{{propiedadId}}" } }
+        }
+      ]
+    },
+
+    {
+      "name": "📊 Reporte Service",
+      "item": [
+        {
+          "name": "Health",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/reportes/health" } }
+        },
+        {
+          "name": "Listar Reportes",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/reportes" } }
+        },
+        {
+          "name": "Obtener por ID",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/reportes/{{reporteId}}" } }
+        },
+        {
+          "name": "Resumen de Propiedades",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/reportes/propiedades" } }
+        },
+        {
+          "name": "Resumen de Reservas + Ingresos",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/reportes/reservas" } }
+        },
+        {
+          "name": "Resumen General ★",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/reportes/general" } }
+        },
+        {
+          "name": "Eliminar Reporte",
+          "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/v1/reportes/{{reporteId}}" } }
+        }
+      ]
+    },
+
+    {
+      "name": "🏥 Health Check (todos los servicios)",
+      "item": [
+        { "name": "Eureka Server",        "request": { "method": "GET", "url": { "raw": "http://localhost:8761" } } },
+        { "name": "API Gateway",          "request": { "method": "GET", "url": { "raw": "http://localhost:8080/api/v1/auth/health" } } },
+        { "name": "Auth Service",         "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/auth/health" } } },
+        { "name": "Usuario Service",      "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/usuarios/health" } } },
+        { "name": "Propiedad Service",    "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/propiedades/health" } } },
+        { "name": "Reserva Service",      "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/reservas/health" } } },
+        { "name": "Reseña Service",       "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/resenas/health" } } },
+        { "name": "Búsqueda Service",     "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/busqueda/health" } } },
+        { "name": "Notificación Service", "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/notificaciones/health" } } },
+        { "name": "Imagen Service",       "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/imagenes/health" } } },
+        { "name": "Reporte Service",      "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/v1/reportes/health" } } }
+      ]
+    }
+
+  ]
+}

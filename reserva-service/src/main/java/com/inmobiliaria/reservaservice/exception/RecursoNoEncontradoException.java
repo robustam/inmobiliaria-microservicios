@@ -1,0 +1,7 @@
+package com.inmobiliaria.reservaservice.exception;
+
+// Se lanza cuando se busca una reserva por ID y no existe en la BD.
+// GlobalExceptionHandler la captura y retorna HTTP 404 con JSON.
+public class RecursoNoEncontradoException extends RuntimeException {
+    public RecursoNoEncontradoException(String mensaje) { super(mensaje); }
+}

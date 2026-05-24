@@ -1,0 +1,18 @@
+-- ============================================================
+--  INMOBILIARIA MICROSERVICIOS
+--  Script 00: Crear todas las bases de datos
+--  Ejecutar este script primero como usuario root
+-- ============================================================
+
+CREATE DATABASE IF NOT EXISTS auth_db         CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS usuario_db      CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS propiedad_db    CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS reserva_db      CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS resena_db       CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS busqueda_db     CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS notificacion_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS imagen_db       CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS reporte_db      CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- Verificar que se crearon
+SHOW DATABASES LIKE '%_db';
