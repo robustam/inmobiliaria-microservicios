@@ -7,6 +7,7 @@ package com.inmobiliaria.usuarioservice.exception; // Paquete de excepciones
 // y las convierte en respuestas JSON estructuradas con código HTTP correcto.
 // ============================================================
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException; // Falla de @Valid
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,6 +17,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 // @RestControllerAdvice: vigila todos los @RestController de este microservicio.
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -50,11 +52,20 @@ public class GlobalExceptionHandler {
     // Exception.class → HTTP 500 (cualquier error no previsto)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneral(Exception e) {
+        log.error("Error inesperado: {}", e.getMessage(), e);
         return ResponseEntity.status(500).body(errorBody("SERVER_ERROR", "Error interno del servidor"));
     }
 
     // Construye el mapa JSON de respuesta de error.
     private Map<String, Object> errorBody(String codigo, String mensaje) {
         return Map.of("codigo", codigo, "mensaje", mensaje, "timestamp", LocalDateTime.now().toString());
+    }
+
+    public static class NegocioException extends RuntimeException {
+        public NegocioException(String mensaje) { super(mensaje); }
+    }
+
+    public static class RecursoNoEncontradoException extends RuntimeException {
+        public RecursoNoEncontradoException(String mensaje) { super(mensaje); }
     }
 }

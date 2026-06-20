@@ -14,8 +14,8 @@ package com.inmobiliaria.usuarioservice.service; // Paquete de servicios
 //   - Desactivar usuarios (borrado lógico: activo = false)
 // ============================================================
 
-import com.inmobiliaria.usuarioservice.exception.NegocioException;             // Error 400
-import com.inmobiliaria.usuarioservice.exception.RecursoNoEncontradoException; // Error 404
+import com.inmobiliaria.usuarioservice.exception.GlobalExceptionHandler.NegocioException;             // Error 400
+import com.inmobiliaria.usuarioservice.exception.GlobalExceptionHandler.RecursoNoEncontradoException; // Error 404
 import com.inmobiliaria.usuarioservice.model.Usuario;                          // Entidad
 import com.inmobiliaria.usuarioservice.repository.UsuarioRepository;           // Acceso BD
 import lombok.RequiredArgsConstructor; // Genera constructor para inyección

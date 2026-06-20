@@ -6,6 +6,7 @@ package com.inmobiliaria.imagenservice.exception;
 // Intercepta excepciones de los Controllers y retorna JSON estructurado.
 // ============================================================
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -47,10 +49,19 @@ public class GlobalExceptionHandler {
     // Exception.class → HTTP 500 (error inesperado)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneral(Exception e) {
+        log.error("Error inesperado: {}", e.getMessage(), e);
         return ResponseEntity.status(500).body(errorBody("SERVER_ERROR", "Error interno del servidor"));
     }
 
     private Map<String, Object> errorBody(String codigo, String mensaje) {
         return Map.of("codigo", codigo, "mensaje", mensaje, "timestamp", LocalDateTime.now().toString());
+    }
+
+    public static class NegocioException extends RuntimeException {
+        public NegocioException(String mensaje) { super(mensaje); }
+    }
+
+    public static class RecursoNoEncontradoException extends RuntimeException {
+        public RecursoNoEncontradoException(String mensaje) { super(mensaje); }
     }
 }

@@ -17,7 +17,7 @@ package com.inmobiliaria.imagenservice.service; // Paquete de servicios
 //   Al establecer una nueva como principal, la anterior pierde ese estado.
 // ============================================================
 
-import com.inmobiliaria.imagenservice.exception.RecursoNoEncontradoException; // Error 404
+import com.inmobiliaria.imagenservice.exception.GlobalExceptionHandler.RecursoNoEncontradoException; // Error 404
 import com.inmobiliaria.imagenservice.model.Imagen;                           // Entidad
 import com.inmobiliaria.imagenservice.repository.ImagenRepository;            // Acceso BD
 import lombok.RequiredArgsConstructor;

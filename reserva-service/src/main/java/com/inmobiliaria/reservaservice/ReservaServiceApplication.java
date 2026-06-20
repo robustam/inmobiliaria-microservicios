@@ -22,17 +22,13 @@ package com.inmobiliaria.reservaservice; // Paquete raíz del microservicio
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.openfeign.EnableFeignClients; // Activa los clientes Feign
+import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
-// scanBasePackages: asegura que Spring encuentre todos los @Component de este paquete.
 @SpringBootApplication(scanBasePackages = {"com.inmobiliaria.reservaservice"})
-
-// @EnableDiscoveryClient: se registra en Eureka para ser encontrado por el Gateway.
 @EnableDiscoveryClient
-
-// @EnableFeignClients: activa el escaneo de interfaces @FeignClient.
-// Sin esta anotación, Spring no crearía la implementación de PropiedadClient.
 @EnableFeignClients
+@EnableScheduling
 public class ReservaServiceApplication {
 
     // Arranque del microservicio.

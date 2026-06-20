@@ -17,7 +17,7 @@ package com.inmobiliaria.reporteservice.service; // Paquete de servicios
 
 import com.inmobiliaria.reporteservice.client.PropiedadClient; // Feign → propiedad-service
 import com.inmobiliaria.reporteservice.client.ReservaClient;   // Feign → reserva-service
-import com.inmobiliaria.reporteservice.exception.RecursoNoEncontradoException;
+import com.inmobiliaria.reporteservice.exception.GlobalExceptionHandler.RecursoNoEncontradoException;
 import com.inmobiliaria.reporteservice.model.Reporte;
 import com.inmobiliaria.reporteservice.model.Reporte.TipoReporte; // inner enum
 import com.inmobiliaria.reporteservice.repository.ReporteRepository;

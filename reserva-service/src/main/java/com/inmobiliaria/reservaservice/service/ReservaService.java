@@ -17,8 +17,8 @@ package com.inmobiliaria.reservaservice.service; // Paquete de servicios
 // ============================================================
 
 import com.inmobiliaria.reservaservice.client.PropiedadClient;               // Feign client
-import com.inmobiliaria.reservaservice.exception.NegocioException;            // Error 400
-import com.inmobiliaria.reservaservice.exception.RecursoNoEncontradoException; // Error 404
+import com.inmobiliaria.reservaservice.exception.GlobalExceptionHandler.NegocioException;            // Error 400
+import com.inmobiliaria.reservaservice.exception.GlobalExceptionHandler.RecursoNoEncontradoException; // Error 404
 import com.inmobiliaria.reservaservice.model.Reserva;                         // Entidad
 import com.inmobiliaria.reservaservice.model.Reserva.EstadoReserva;           // inner enum
 import com.inmobiliaria.reservaservice.repository.ReservaRepository;          // Acceso BD

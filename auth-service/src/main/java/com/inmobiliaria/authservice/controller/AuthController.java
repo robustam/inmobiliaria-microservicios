@@ -55,7 +55,7 @@ public class AuthController {
     // Retorna un String simple (no JSON).
     @GetMapping("/health")
     public String health() {
-        return "Auth Service is UP! ✅";
+        return "Auth Service is UP! ";
     }
 
     // ────────────────────────────────────────────────────────────

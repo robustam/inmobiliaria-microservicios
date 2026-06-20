@@ -31,6 +31,7 @@ public interface PropiedadClient {
     @GetMapping("/api/v1/propiedades/buscar")
     List<PropiedadDTO> buscar(
             @RequestParam(required = false) String region,     // filtro por región
+            @RequestParam(required = false) String ciudad,     // filtro por ciudad
             @RequestParam(required = false) String comuna,     // filtro por comuna
             @RequestParam(required = false) String tipo,       // "CASA" o "DEPARTAMENTO"
             @RequestParam(required = false) BigDecimal precioMin, // precio mínimo

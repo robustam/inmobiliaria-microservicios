@@ -7,6 +7,7 @@ package com.inmobiliaria.busquedaservice.exception;
 // busqueda-service no tiene BD propia, pero puede recibir errores de Feign.
 // ============================================================
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -39,13 +41,28 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(400).body(errorBody("VALIDATION_ERROR", mensaje));
     }
 
+    // IllegalArgumentException → HTTP 400
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, Object>> handleIllegalArgument(IllegalArgumentException e) {
+        return ResponseEntity.status(400).body(errorBody("BAD_REQUEST", e.getMessage()));
+    }
+
     // Exception.class → HTTP 500 (error inesperado, incluye errores de Feign si no se maneja)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneral(Exception e) {
+        log.error("Error inesperado: {}", e.getMessage(), e);
         return ResponseEntity.status(500).body(errorBody("SERVER_ERROR", "Error interno del servidor"));
     }
 
     private Map<String, Object> errorBody(String codigo, String mensaje) {
         return Map.of("codigo", codigo, "mensaje", mensaje, "timestamp", LocalDateTime.now().toString());
+    }
+
+    public static class NegocioException extends RuntimeException {
+        public NegocioException(String mensaje) { super(mensaje); }
+    }
+
+    public static class RecursoNoEncontradoException extends RuntimeException {
+        public RecursoNoEncontradoException(String mensaje) { super(mensaje); }
     }
 }

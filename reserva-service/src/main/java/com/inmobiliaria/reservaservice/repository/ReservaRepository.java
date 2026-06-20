@@ -40,4 +40,9 @@ public interface ReservaRepository extends CrudRepository<Reserva, Long> {
     // SQL: SELECT COUNT(*) > 0 FROM reservas WHERE propiedad_id = ? AND estado IN (?, ?, ...)
     // Usado para saber si una propiedad tiene reservas PENDIENTES o CONFIRMADAS.
     boolean existsByPropiedadIdAndEstadoIn(Long propiedadId, List<EstadoReserva> estados);
+
+    // findByEstadoInAndFechaFinBefore(): reservas cuya fecha de fin ya pasó y siguen activas.
+    // Usado por el scheduler para detectar arriendos vencidos automáticamente.
+    // SQL: SELECT * FROM reservas WHERE estado IN (?, ...) AND fecha_fin < ?
+    List<Reserva> findByEstadoInAndFechaFinBefore(List<EstadoReserva> estados, java.time.LocalDate fecha);
 }

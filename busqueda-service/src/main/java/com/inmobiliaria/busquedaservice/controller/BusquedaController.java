@@ -32,7 +32,7 @@ public class BusquedaController {
 
     @GetMapping("/health")
     public String health() {
-        return "Busqueda Service is UP! ✅";
+        return "Busqueda Service is UP! ";
     }
 
     // GET /api/v1/busqueda?region=Santiago&tipo=DEPARTAMENTO&precioMax=300000
@@ -48,6 +48,7 @@ public class BusquedaController {
     @GetMapping
     public ResponseEntity<List<PropiedadClient.PropiedadDTO>> getBusqueda(
             @RequestParam(required = false) String region,
+            @RequestParam(required = false) String ciudad,
             @RequestParam(required = false) String comuna,
             @RequestParam(required = false) String tipo,
             @RequestParam(required = false) BigDecimal precioMin,
@@ -55,7 +56,7 @@ public class BusquedaController {
             @RequestParam(required = false) Integer habitacionesMin,
             @RequestParam(required = false) Double metrosMin) {
         return ResponseEntity.ok(
-                busquedaService.buscar(region, comuna, tipo, precioMin, precioMax, habitacionesMin, metrosMin));
+                busquedaService.buscar(region, ciudad, comuna, tipo, precioMin, precioMax, habitacionesMin, metrosMin));
     }
 
     // GET /api/v1/busqueda/disponibles → todas las propiedades DISPONIBLES

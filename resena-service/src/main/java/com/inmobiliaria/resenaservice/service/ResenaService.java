@@ -17,8 +17,8 @@ package com.inmobiliaria.resenaservice.service; // Paquete de servicios
 // ============================================================
 
 import com.inmobiliaria.resenaservice.client.PropiedadClient;               // Feign client
-import com.inmobiliaria.resenaservice.exception.NegocioException;            // Error 400
-import com.inmobiliaria.resenaservice.exception.RecursoNoEncontradoException; // Error 404
+import com.inmobiliaria.resenaservice.exception.GlobalExceptionHandler.NegocioException;            // Error 400
+import com.inmobiliaria.resenaservice.exception.GlobalExceptionHandler.RecursoNoEncontradoException; // Error 404
 import com.inmobiliaria.resenaservice.model.Resena;                         // Entidad
 import com.inmobiliaria.resenaservice.repository.ResenaRepository;          // Acceso BD
 import lombok.RequiredArgsConstructor;

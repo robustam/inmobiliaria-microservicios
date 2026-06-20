@@ -59,4 +59,12 @@ public class GlobalExceptionHandler {
     private Map<String, Object> errorBody(String codigo, String mensaje) {
         return Map.of("codigo", codigo, "mensaje", mensaje, "timestamp", LocalDateTime.now().toString());
     }
+
+    public static class NegocioException extends RuntimeException {
+        public NegocioException(String mensaje) { super(mensaje); }
+    }
+
+    public static class RecursoNoEncontradoException extends RuntimeException {
+        public RecursoNoEncontradoException(String mensaje) { super(mensaje); }
+    }
 }

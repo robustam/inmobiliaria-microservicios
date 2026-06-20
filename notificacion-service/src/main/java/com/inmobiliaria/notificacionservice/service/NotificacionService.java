@@ -13,7 +13,7 @@ package com.inmobiliaria.notificacionservice.service; // Paquete de servicios
 //   - Eliminar notificaciones
 // ============================================================
 
-import com.inmobiliaria.notificacionservice.exception.RecursoNoEncontradoException; // Error 404
+import com.inmobiliaria.notificacionservice.exception.GlobalExceptionHandler.RecursoNoEncontradoException; // Error 404
 import com.inmobiliaria.notificacionservice.model.Notificacion;                     // Entidad
 import com.inmobiliaria.notificacionservice.repository.NotificacionRepository;      // Acceso BD
 import lombok.RequiredArgsConstructor;

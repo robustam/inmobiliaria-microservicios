@@ -17,6 +17,7 @@ package com.inmobiliaria.propiedadservice.exception; // Paquete de excepciones
 // }
 // ============================================================
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException; // Excepción de @Valid
 import org.springframework.web.bind.annotation.ExceptionHandler;    // Qué excepción maneja
@@ -27,6 +28,7 @@ import java.util.stream.Collectors; // Para unir mensajes de validación
 
 // @RestControllerAdvice: intercepta excepciones de TODOS los @RestController
 // de este microservicio antes de que lleguen al cliente.
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -69,6 +71,7 @@ public class GlobalExceptionHandler {
     // Mensaje genérico para no exponer detalles internos al cliente.
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGeneral(Exception e) {
+        log.error("Error inesperado: {}", e.getMessage(), e);
         return ResponseEntity.status(500).body(errorBody("SERVER_ERROR", "Error interno del servidor"));
     }
 
@@ -80,5 +83,13 @@ public class GlobalExceptionHandler {
             "mensaje",   mensaje,                         // descripción del error
             "timestamp", LocalDateTime.now().toString()   // fecha y hora del error
         );
+    }
+
+    public static class NegocioException extends RuntimeException {
+        public NegocioException(String mensaje) { super(mensaje); }
+    }
+
+    public static class RecursoNoEncontradoException extends RuntimeException {
+        public RecursoNoEncontradoException(String mensaje) { super(mensaje); }
     }
 }

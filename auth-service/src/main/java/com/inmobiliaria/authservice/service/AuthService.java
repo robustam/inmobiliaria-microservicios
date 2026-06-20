@@ -15,8 +15,8 @@ package com.inmobiliaria.authservice.service; // Paquete de servicios del auth-s
 // ============================================================
 
 import com.inmobiliaria.authservice.dto.*;                    // DTOs de entrada/salida
-import com.inmobiliaria.authservice.exception.NegocioException;             // Error de regla de negocio
-import com.inmobiliaria.authservice.exception.RecursoNoEncontradoException; // Error 404
+import com.inmobiliaria.authservice.exception.GlobalExceptionHandler.NegocioException;             // Error de regla de negocio
+import com.inmobiliaria.authservice.exception.GlobalExceptionHandler.RecursoNoEncontradoException; // Error 404
 import com.inmobiliaria.authservice.model.Usuario;                          // Entidad de usuario
 import com.inmobiliaria.authservice.model.Usuario.Role;                     // Enum de roles (inner class)
 import com.inmobiliaria.authservice.repository.UsuarioRepository;           // Acceso a la BD

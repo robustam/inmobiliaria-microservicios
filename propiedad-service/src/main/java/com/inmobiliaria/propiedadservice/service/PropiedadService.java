@@ -14,8 +14,8 @@ package com.inmobiliaria.propiedadservice.service; // Paquete de servicios
 //   - "Eliminar" (en realidad cambia el estado a INACTIVA, no borra el registro)
 // ============================================================
 
-import com.inmobiliaria.propiedadservice.exception.NegocioException;             // Error 400
-import com.inmobiliaria.propiedadservice.exception.RecursoNoEncontradoException; // Error 404
+import com.inmobiliaria.propiedadservice.exception.GlobalExceptionHandler.NegocioException;             // Error 400
+import com.inmobiliaria.propiedadservice.exception.GlobalExceptionHandler.RecursoNoEncontradoException; // Error 404
 import com.inmobiliaria.propiedadservice.model.Propiedad;                        // Entidad
 import com.inmobiliaria.propiedadservice.model.Propiedad.EstadoPropiedad;        // inner enum
 import com.inmobiliaria.propiedadservice.model.Propiedad.TipoPropiedad;          // inner enum

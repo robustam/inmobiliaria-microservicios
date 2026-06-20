@@ -33,18 +33,18 @@ public class BusquedaService {
     // Los primeros 5 filtros se delegan a propiedad-service via Feign.
     // Los últimos 2 (habitacionesMin, metrosMin) se aplican aquí con Stream.
     public List<PropiedadClient.PropiedadDTO> buscar(
-            String region, String comuna, String tipo,
+            String region, String ciudad, String comuna, String tipo,
             BigDecimal precioMin, BigDecimal precioMax,
             Integer habitacionesMin, Double metrosMin) {
 
         // log.debug() con todos los parámetros para facilitar la depuración.
-        log.debug("Búsqueda de arriendos - region:{} comuna:{} tipo:{} precioMin:{} precioMax:{} habitMin:{} metrosMin:{}",
-                region, comuna, tipo, precioMin, precioMax, habitacionesMin, metrosMin);
+        log.debug("Búsqueda de arriendos - region:{} ciudad:{} comuna:{} tipo:{} precioMin:{} precioMax:{} habitMin:{} metrosMin:{}",
+                region, ciudad, comuna, tipo, precioMin, precioMax, habitacionesMin, metrosMin);
 
         // PASO 1: llamar a propiedad-service con los filtros básicos.
-        // Feign: GET /api/v1/propiedades/buscar?region=...&tipo=...
+        // Feign: GET /api/v1/propiedades/buscar?region=...&ciudad=...&tipo=...
         // PASO 2: aplicar filtros adicionales con Stream API.
-        List<PropiedadClient.PropiedadDTO> resultados = propiedadClient.buscar(region, comuna, tipo, precioMin, precioMax)
+        List<PropiedadClient.PropiedadDTO> resultados = propiedadClient.buscar(region, ciudad, comuna, tipo, precioMin, precioMax)
                 .stream() // convierte la lista en un flujo de datos para procesar
                 // filter(): mantiene solo los elementos que cumplen la condición.
                 // Primer filtro: si habitacionesMin es null, no filtra (todos pasan).
