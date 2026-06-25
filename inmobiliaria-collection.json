@@ -1,0 +1,1625 @@
+{
+  "info": {
+    "_postman_id": "inmobiliaria-ms-2026",
+    "name": "Inmobiliaria Microservicios - CRUD Completo",
+    "description": "Coleccion completa CRUD de los 9 microservicios.\n\n3 USUARIOS:\n  1. carlos_soto  (USER)       -> Santiago\n  2. maria_gonzalez (PROPIETARIO) -> Valparaiso\n  3. pedro_ramirez  (USER)       -> Concepcion\n\n3 PROPIEDADES (propietario: Maria, ID 2):\n  1. Depto Providencia  -> $450.000 CLP\n  2. Casa Vina del Mar  -> $350.000 CLP\n  3. Depto Concepcion   -> $280.000 CLP\n\nORDEN SUGERIDO:\n  Auth -> Usuario -> Propiedad -> Reserva -> Resena -> Busqueda -> Notificacion -> Imagen -> Reporte",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url",     "value": "http://localhost:8080", "type": "string" },
+    { "key": "token",        "value": "",                      "type": "string" },
+    { "key": "token_maria",  "value": "",                      "type": "string" },
+    { "key": "token_pedro",  "value": "",                      "type": "string" }
+  ],
+  "item": [
+
+    {
+      "name": "1. Auth Service",
+      "item": [
+        {
+          "name": "POST Register - carlos_soto (USER)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"carlos_soto\",\n  \"email\": \"carlos@inmobiliaria.cl\",\n  \"password\": \"Carlos123!\",\n  \"nombre\": \"Carlos\",\n  \"role\": \"USER\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "POST Register - maria_gonzalez (PROPIETARIO)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"maria_gonzalez\",\n  \"email\": \"maria@inmobiliaria.cl\",\n  \"password\": \"Maria123!\",\n  \"nombre\": \"Maria\",\n  \"role\": \"PROPIETARIO\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "POST Register - pedro_ramirez (USER)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"pedro_ramirez\",\n  \"email\": \"pedro@inmobiliaria.cl\",\n  \"password\": \"Pedro123!\",\n  \"nombre\": \"Pedro\",\n  \"role\": \"USER\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "POST Login - carlos_soto (guarda token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var json = pm.response.json();",
+                  "    pm.collectionVariables.set('token', json.token);",
+                  "    console.log('Token carlos guardado:', json.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"carlos_soto\",\n  \"password\": \"Carlos123!\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "POST Login - maria_gonzalez (guarda token_maria)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var json = pm.response.json();",
+                  "    pm.collectionVariables.set('token_maria', json.token);",
+                  "    console.log('Token maria guardado:', json.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"maria_gonzalez\",\n  \"password\": \"Maria123!\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "POST Login - pedro_ramirez (guarda token_pedro)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var json = pm.response.json();",
+                  "    pm.collectionVariables.set('token_pedro', json.token);",
+                  "    console.log('Token pedro guardado:', json.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"pedro_ramirez\",\n  \"password\": \"Pedro123!\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "[NOK] POST Register - username duplicado (400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"carlos_soto\",\n  \"email\": \"otro@email.cl\",\n  \"password\": \"Carlos123!\",\n  \"role\": \"USER\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "[NOK] POST Login - contrasena incorrecta (401)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"carlos_soto\",\n  \"password\": \"Incorrecta999\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "2. Usuario Service",
+      "item": [
+        {
+          "name": "POST Crear - Carlos Soto (Santiago)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type",  "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Carlos\",\n  \"apellido\": \"Soto\",\n  \"email\": \"carlos@inmobiliaria.cl\",\n  \"telefono\": \"+56912345678\",\n  \"direccion\": \"Av. Providencia 1234\",\n  \"ciudad\": \"Santiago\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/usuarios",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "usuarios"]
+            }
+          }
+        },
+        {
+          "name": "POST Crear - Maria Gonzalez (Valparaiso)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type",  "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_maria}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Maria\",\n  \"apellido\": \"Gonzalez\",\n  \"email\": \"maria@inmobiliaria.cl\",\n  \"telefono\": \"+56923456789\",\n  \"direccion\": \"Calle Victoria 567\",\n  \"ciudad\": \"Valparaiso\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/usuarios",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "usuarios"]
+            }
+          }
+        },
+        {
+          "name": "POST Crear - Pedro Ramirez (Concepcion)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type",  "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_pedro}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Pedro\",\n  \"apellido\": \"Ramirez\",\n  \"email\": \"pedro@inmobiliaria.cl\",\n  \"telefono\": \"+56934567890\",\n  \"direccion\": \"Calle Lamas 890\",\n  \"ciudad\": \"Concepcion\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/usuarios",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "usuarios"]
+            }
+          }
+        },
+        {
+          "name": "GET Listar todos los usuarios",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/v1/usuarios",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "usuarios"]
+            }
+          }
+        },
+        {
+          "name": "GET por ID - Carlos (ID 1)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/usuarios/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "usuarios", "1"]
+            }
+          }
+        },
+        {
+          "name": "GET por ID - Maria (ID 2)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/usuarios/2",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "usuarios", "2"]
+            }
+          }
+        },
+        {
+          "name": "GET por ID - Pedro (ID 3)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/usuarios/3",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "usuarios", "3"]
+            }
+          }
+        },
+        {
+          "name": "GET por Email - carlos@inmobiliaria.cl",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/usuarios/email/carlos@inmobiliaria.cl",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "usuarios", "email", "carlos@inmobiliaria.cl"]
+            }
+          }
+        },
+        {
+          "name": "GET por Ciudad - Santiago",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/usuarios/ciudad/Santiago",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "usuarios", "ciudad", "Santiago"]
+            }
+          }
+        },
+        {
+          "name": "PUT Actualizar - Carlos (ID 1)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type",  "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Carlos Alberto\",\n  \"apellido\": \"Soto Morales\",\n  \"email\": \"carlos@inmobiliaria.cl\",\n  \"telefono\": \"+56912345678\",\n  \"direccion\": \"Av. Providencia 1234, Depto 501\",\n  \"ciudad\": \"Santiago\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/usuarios/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "usuarios", "1"]
+            }
+          }
+        },
+        {
+          "name": "DELETE Desactivar - Pedro (ID 3)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/v1/usuarios/3",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "usuarios", "3"]
+            }
+          }
+        },
+        {
+          "name": "[NOK] POST Crear - email duplicado (400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Otro\",\n  \"apellido\": \"Usuario\",\n  \"email\": \"carlos@inmobiliaria.cl\",\n  \"telefono\": \"+56911111111\",\n  \"ciudad\": \"Santiago\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/usuarios",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "usuarios"]
+            }
+          }
+        },
+        {
+          "name": "[NOK] GET por ID - inexistente (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/usuarios/999",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "usuarios", "999"]
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "3. Propiedad Service",
+      "item": [
+        {
+          "name": "POST Crear Propiedad 1 - Depto Providencia $450.000",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type",  "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_maria}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Departamento moderno en Providencia\",\n  \"descripcion\": \"Hermoso departamento de 2 dormitorios con vista a la ciudad, cocina equipada y estacionamiento incluido\",\n  \"precio\": 450000,\n  \"moneda\": \"CLP\",\n  \"region\": \"Metropolitana\",\n  \"ciudad\": \"Santiago\",\n  \"comuna\": \"Providencia\",\n  \"direccion\": \"Av. Providencia 1500, Depto 302\",\n  \"habitaciones\": 2,\n  \"banos\": 1,\n  \"metrosCuadrados\": 65.0,\n  \"tipo\": \"DEPARTAMENTO\",\n  \"propietarioId\": 2\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/propiedades",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "propiedades"]
+            }
+          }
+        },
+        {
+          "name": "POST Crear Propiedad 2 - Casa Vina del Mar $350.000",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type",  "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_maria}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Casa familiar en Vina del Mar\",\n  \"descripcion\": \"Espaciosa casa de 3 dormitorios con jardin privado, parrilla y garage doble. A 5 minutos de la playa\",\n  \"precio\": 350000,\n  \"moneda\": \"CLP\",\n  \"region\": \"Valparaiso\",\n  \"ciudad\": \"Valparaiso\",\n  \"comuna\": \"Vina del Mar\",\n  \"direccion\": \"Calle 5 Norte 890\",\n  \"habitaciones\": 3,\n  \"banos\": 2,\n  \"metrosCuadrados\": 90.0,\n  \"tipo\": \"CASA\",\n  \"propietarioId\": 2\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/propiedades",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "propiedades"]
+            }
+          }
+        },
+        {
+          "name": "POST Crear Propiedad 3 - Depto Concepcion $280.000",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type",  "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_maria}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Departamento economico en Concepcion\",\n  \"descripcion\": \"Acogedor departamento de 1 dormitorio, ideal para estudiantes o parejas. Cercano a la Universidad de Concepcion\",\n  \"precio\": 280000,\n  \"moneda\": \"CLP\",\n  \"region\": \"Biobio\",\n  \"ciudad\": \"Concepcion\",\n  \"comuna\": \"Concepcion\",\n  \"direccion\": \"Calle Lamas 456, Depto 201\",\n  \"habitaciones\": 1,\n  \"banos\": 1,\n  \"metrosCuadrados\": 45.0,\n  \"tipo\": \"DEPARTAMENTO\",\n  \"propietarioId\": 2\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/propiedades",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "propiedades"]
+            }
+          }
+        },
+        {
+          "name": "GET Propiedades disponibles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/propiedades",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "propiedades"]
+            }
+          }
+        },
+        {
+          "name": "GET Todas las propiedades (incluye inactivas)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/propiedades/todas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "propiedades", "todas"]
+            }
+          }
+        },
+        {
+          "name": "GET por ID - Propiedad 1 (Providencia)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/propiedades/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "propiedades", "1"]
+            }
+          }
+        },
+        {
+          "name": "GET por ID - Propiedad 2 (Vina del Mar)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/propiedades/2",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "propiedades", "2"]
+            }
+          }
+        },
+        {
+          "name": "GET por ID - Propiedad 3 (Concepcion)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/propiedades/3",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "propiedades", "3"]
+            }
+          }
+        },
+        {
+          "name": "GET por Propietario - Maria (ID 2)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/propiedades/propietario/2",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "propiedades", "propietario", "2"]
+            }
+          }
+        },
+        {
+          "name": "GET por Region - Metropolitana",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/propiedades/region/Metropolitana",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "propiedades", "region", "Metropolitana"]
+            }
+          }
+        },
+        {
+          "name": "GET por Comuna - Providencia",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/propiedades/comuna/Providencia",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "propiedades", "comuna", "Providencia"]
+            }
+          }
+        },
+        {
+          "name": "GET Buscar - tipo DEPARTAMENTO, precioMax 460000",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/propiedades/buscar?tipo=DEPARTAMENTO&precioMax=460000",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "propiedades", "buscar"],
+              "query": [
+                { "key": "tipo",      "value": "DEPARTAMENTO" },
+                { "key": "precioMax", "value": "460000" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Buscar - ciudad Santiago, precioMin 400000",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/propiedades/buscar?ciudad=Santiago&precioMin=400000",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "propiedades", "buscar"],
+              "query": [
+                { "key": "ciudad",    "value": "Santiago" },
+                { "key": "precioMin", "value": "400000" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "PUT Actualizar - Propiedad 1 (precio y descripcion)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type",  "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_maria}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Departamento premium en Providencia - Remodelado\",\n  \"descripcion\": \"Departamento completamente remodelado. Cocina americana, pisos de madera, aire acondicionado y balcon con vista al parque\",\n  \"precio\": 480000,\n  \"moneda\": \"CLP\",\n  \"region\": \"Metropolitana\",\n  \"ciudad\": \"Santiago\",\n  \"comuna\": \"Providencia\",\n  \"direccion\": \"Av. Providencia 1500, Depto 302\",\n  \"habitaciones\": 2,\n  \"banos\": 1,\n  \"metrosCuadrados\": 65.0,\n  \"tipo\": \"DEPARTAMENTO\",\n  \"propietarioId\": 2\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/propiedades/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "propiedades", "1"]
+            }
+          }
+        },
+        {
+          "name": "PATCH Estado - Propiedad 2 a ARRENDADA",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token_maria}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/v1/propiedades/2/estado?estado=ARRENDADA",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "propiedades", "2", "estado"],
+              "query": [{ "key": "estado", "value": "ARRENDADA" }]
+            }
+          }
+        },
+        {
+          "name": "PATCH Estado - Propiedad 2 a DISPONIBLE",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token_maria}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/v1/propiedades/2/estado?estado=DISPONIBLE",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "propiedades", "2", "estado"],
+              "query": [{ "key": "estado", "value": "DISPONIBLE" }]
+            }
+          }
+        },
+        {
+          "name": "DELETE Desactivar - Propiedad 3 (Concepcion)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token_maria}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/v1/propiedades/3",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "propiedades", "3"]
+            }
+          }
+        },
+        {
+          "name": "[NOK] POST Crear - sin titulo (400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"descripcion\": \"Sin titulo\",\n  \"precio\": 200000,\n  \"region\": \"Metropolitana\",\n  \"ciudad\": \"Santiago\",\n  \"comuna\": \"Santiago\",\n  \"tipo\": \"CASA\",\n  \"propietarioId\": 2\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/propiedades",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "propiedades"]
+            }
+          }
+        },
+        {
+          "name": "[NOK] GET por ID - inexistente (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/propiedades/999",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "propiedades", "999"]
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "4. Reserva Service",
+      "item": [
+        {
+          "name": "POST Crear Reserva 1 - Carlos en Propiedad 1",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type",  "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propiedadId\": 1,\n  \"usuarioId\": 1,\n  \"fechaInicio\": \"2026-07-01\",\n  \"fechaFin\": \"2026-07-31\",\n  \"monto\": 480000,\n  \"comentario\": \"Reserva para julio, necesito estacionamiento\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/reservas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "reservas"]
+            }
+          }
+        },
+        {
+          "name": "POST Crear Reserva 2 - Pedro en Propiedad 2",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type",  "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_pedro}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propiedadId\": 2,\n  \"usuarioId\": 3,\n  \"fechaInicio\": \"2026-08-01\",\n  \"fechaFin\": \"2026-08-31\",\n  \"monto\": 350000,\n  \"comentario\": \"Vacaciones de invierno en Vina del Mar\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/reservas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "reservas"]
+            }
+          }
+        },
+        {
+          "name": "GET Listar todas las reservas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reservas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "reservas"]
+            }
+          }
+        },
+        {
+          "name": "GET por ID - Reserva 1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reservas/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "reservas", "1"]
+            }
+          }
+        },
+        {
+          "name": "GET por ID - Reserva 2",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reservas/2",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "reservas", "2"]
+            }
+          }
+        },
+        {
+          "name": "GET por Usuario - Carlos (ID 1)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reservas/usuario/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "reservas", "usuario", "1"]
+            }
+          }
+        },
+        {
+          "name": "GET por Propiedad - Propiedad 1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reservas/propiedad/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "reservas", "propiedad", "1"]
+            }
+          }
+        },
+        {
+          "name": "PATCH Estado - Reserva 1 a CONFIRMADA",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reservas/1/estado?estado=CONFIRMADA",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "reservas", "1", "estado"],
+              "query": [{ "key": "estado", "value": "CONFIRMADA" }]
+            }
+          }
+        },
+        {
+          "name": "PATCH Estado - Reserva 1 a COMPLETADA",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reservas/1/estado?estado=COMPLETADA",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "reservas", "1", "estado"],
+              "query": [{ "key": "estado", "value": "COMPLETADA" }]
+            }
+          }
+        },
+        {
+          "name": "PATCH Estado - Reserva 2 a CANCELADA",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token_pedro}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reservas/2/estado?estado=CANCELADA",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "reservas", "2", "estado"],
+              "query": [{ "key": "estado", "value": "CANCELADA" }]
+            }
+          }
+        },
+        {
+          "name": "DELETE Eliminar - Reserva 2",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reservas/2",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "reservas", "2"]
+            }
+          }
+        },
+        {
+          "name": "[NOK] POST Crear - sin propiedadId (400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuarioId\": 1,\n  \"fechaInicio\": \"2026-09-01\",\n  \"fechaFin\": \"2026-09-30\",\n  \"monto\": 300000\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/reservas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "reservas"]
+            }
+          }
+        },
+        {
+          "name": "[NOK] GET por ID - inexistente (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reservas/999",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "reservas", "999"]
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "5. Resena Service",
+      "item": [
+        {
+          "name": "POST Crear Resena 1 - Carlos sobre Propiedad 1 (5 estrellas)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type",  "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propiedadId\": 1,\n  \"usuarioId\": 1,\n  \"nombreUsuario\": \"Carlos Soto\",\n  \"calificacion\": 5,\n  \"comentario\": \"Excelente departamento, muy bien ubicado en Providencia. El propietario muy atento y el lugar impecable. 100% recomendado\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/resenas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "resenas"]
+            }
+          }
+        },
+        {
+          "name": "POST Crear Resena 2 - Pedro sobre Propiedad 2 (4 estrellas)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type",  "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token_pedro}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propiedadId\": 2,\n  \"usuarioId\": 3,\n  \"nombreUsuario\": \"Pedro Ramirez\",\n  \"calificacion\": 4,\n  \"comentario\": \"Muy buena casa, espaciosa y con buen jardin. Cerca de la playa. Solo le falta un poco mas de equipamiento en la cocina\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/resenas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "resenas"]
+            }
+          }
+        },
+        {
+          "name": "POST Crear Resena 3 - Carlos sobre Propiedad 2 (3 estrellas)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type",  "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propiedadId\": 2,\n  \"usuarioId\": 1,\n  \"nombreUsuario\": \"Carlos Soto\",\n  \"calificacion\": 3,\n  \"comentario\": \"Propiedad regular, el sector es bueno pero la casa necesita mantención. El baño tiene problemas con la presión del agua\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/resenas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "resenas"]
+            }
+          }
+        },
+        {
+          "name": "GET Listar todas las resenas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/resenas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "resenas"]
+            }
+          }
+        },
+        {
+          "name": "GET por ID - Resena 1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/resenas/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "resenas", "1"]
+            }
+          }
+        },
+        {
+          "name": "GET por Propiedad - Resenas de Propiedad 2",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/resenas/propiedad/2",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "resenas", "propiedad", "2"]
+            }
+          }
+        },
+        {
+          "name": "GET Estadisticas - Propiedad 2 (promedio y total)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/resenas/propiedad/2/estadisticas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "resenas", "propiedad", "2", "estadisticas"]
+            }
+          }
+        },
+        {
+          "name": "GET por Usuario - Resenas de Carlos (ID 1)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/resenas/usuario/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "resenas", "usuario", "1"]
+            }
+          }
+        },
+        {
+          "name": "PUT Actualizar - Resena 1 (nueva calificacion y comentario)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type",  "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propiedadId\": 1,\n  \"usuarioId\": 1,\n  \"nombreUsuario\": \"Carlos Soto\",\n  \"calificacion\": 5,\n  \"comentario\": \"Sigo confirmando que es el mejor departamento que he arrendado. El propietario siempre disponible para cualquier problema. Totalmente recomendado!\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/resenas/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "resenas", "1"]
+            }
+          }
+        },
+        {
+          "name": "DELETE Eliminar - Resena 3",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/v1/resenas/3",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "resenas", "3"]
+            }
+          }
+        },
+        {
+          "name": "[NOK] POST Crear - propiedad inexistente (404/500)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propiedadId\": 999,\n  \"usuarioId\": 1,\n  \"calificacion\": 4,\n  \"comentario\": \"Propiedad que no existe\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/resenas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "resenas"]
+            }
+          }
+        },
+        {
+          "name": "[NOK] POST Crear - calificacion fuera de rango (400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propiedadId\": 1,\n  \"usuarioId\": 1,\n  \"calificacion\": 10,\n  \"comentario\": \"Calificacion invalida mayor a 5\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/resenas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "resenas"]
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "6. Busqueda Service",
+      "item": [
+        {
+          "name": "GET Health - Busqueda Service UP",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/busqueda/health",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "busqueda", "health"]
+            }
+          }
+        },
+        {
+          "name": "GET Buscar - sin filtros (todas disponibles)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/busqueda",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "busqueda"]
+            }
+          }
+        },
+        {
+          "name": "GET Buscar - por region Metropolitana",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/busqueda?region=Metropolitana",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "busqueda"],
+              "query": [{ "key": "region", "value": "Metropolitana" }]
+            }
+          }
+        },
+        {
+          "name": "GET Buscar - ciudad Santiago, tipo DEPARTAMENTO",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/busqueda?ciudad=Santiago&tipo=DEPARTAMENTO",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "busqueda"],
+              "query": [
+                { "key": "ciudad", "value": "Santiago" },
+                { "key": "tipo",   "value": "DEPARTAMENTO" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Buscar - precioMax 400000",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/busqueda?precioMax=400000",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "busqueda"],
+              "query": [{ "key": "precioMax", "value": "400000" }]
+            }
+          }
+        },
+        {
+          "name": "GET Buscar - habitacionesMin 2, metrosMin 60",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/busqueda?habitacionesMin=2&metrosMin=60",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "busqueda"],
+              "query": [
+                { "key": "habitacionesMin", "value": "2" },
+                { "key": "metrosMin",       "value": "60" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Disponibles - todas las propiedades disponibles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/busqueda/disponibles",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "busqueda", "disponibles"]
+            }
+          }
+        },
+        {
+          "name": "GET Destacadas - top 10 propiedades",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/busqueda/destacadas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "busqueda", "destacadas"]
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "7. Notificacion Service",
+      "item": [
+        {
+          "name": "POST Crear Notif 1 - Carlos: nueva reserva (RESERVA)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuarioId\": 1,\n  \"titulo\": \"Reserva confirmada\",\n  \"mensaje\": \"Tu reserva #1 del departamento en Providencia ha sido confirmada para el periodo 01/07/2026 - 31/07/2026\",\n  \"tipo\": \"RESERVA\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/notificaciones",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "notificaciones"]
+            }
+          }
+        },
+        {
+          "name": "POST Crear Notif 2 - Carlos: bienvenida (BIENVENIDA)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuarioId\": 1,\n  \"titulo\": \"Bienvenido a Inmobiliaria\",\n  \"mensaje\": \"Hola Carlos! Tu cuenta ha sido creada exitosamente. Ya puedes buscar y reservar propiedades en todo Chile\",\n  \"tipo\": \"BIENVENIDA\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/notificaciones",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "notificaciones"]
+            }
+          }
+        },
+        {
+          "name": "POST Crear Notif 3 - Maria: nueva resena recibida (RESENA)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuarioId\": 2,\n  \"titulo\": \"Nueva resena en tu propiedad\",\n  \"mensaje\": \"Tu departamento en Providencia recibio una nueva resena con 5 estrellas. Revisa los comentarios del arrendatario\",\n  \"tipo\": \"RESENA\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/notificaciones",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "notificaciones"]
+            }
+          }
+        },
+        {
+          "name": "POST Crear Notif 4 - Pedro: recordatorio de pago (PAGO)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuarioId\": 3,\n  \"titulo\": \"Recordatorio de pago\",\n  \"mensaje\": \"Recuerda que el pago de tu arriendo por $350.000 vence el 05 de agosto de 2026\",\n  \"tipo\": \"PAGO\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/notificaciones",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "notificaciones"]
+            }
+          }
+        },
+        {
+          "name": "GET por Usuario - Notificaciones de Carlos (ID 1)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/notificaciones?usuarioId=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "notificaciones"],
+              "query": [{ "key": "usuarioId", "value": "1" }]
+            }
+          }
+        },
+        {
+          "name": "GET No leidas - Carlos (ID 1)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/notificaciones/no-leidas?usuarioId=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "notificaciones", "no-leidas"],
+              "query": [{ "key": "usuarioId", "value": "1" }]
+            }
+          }
+        },
+        {
+          "name": "GET Resumen - Carlos (total y no leidas)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/notificaciones/resumen?usuarioId=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "notificaciones", "resumen"],
+              "query": [{ "key": "usuarioId", "value": "1" }]
+            }
+          }
+        },
+        {
+          "name": "GET por ID - Notificacion 1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/notificaciones/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "notificaciones", "1"]
+            }
+          }
+        },
+        {
+          "name": "PATCH Marcar leida - Notificacion 1",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/notificaciones/1/leer",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "notificaciones", "1", "leer"]
+            }
+          }
+        },
+        {
+          "name": "PATCH Marcar todas leidas - Carlos (ID 1)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/notificaciones/leer-todas?usuarioId=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "notificaciones", "leer-todas"],
+              "query": [{ "key": "usuarioId", "value": "1" }]
+            }
+          }
+        },
+        {
+          "name": "DELETE Eliminar - Notificacion 4",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/notificaciones/4",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "notificaciones", "4"]
+            }
+          }
+        },
+        {
+          "name": "[NOK] POST Crear - sin titulo (400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuarioId\": 1,\n  \"mensaje\": \"Sin titulo este mensaje\",\n  \"tipo\": \"SISTEMA\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/notificaciones",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "notificaciones"]
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "8. Imagen Service",
+      "item": [
+        {
+          "name": "POST Registrar Imagen 1 - Propiedad 1 (sala, principal)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propiedadId\": 1,\n  \"url\": \"https://images.inmobiliaria.cl/propiedades/1/sala-principal.jpg\",\n  \"nombre\": \"sala-principal.jpg\",\n  \"tipoMime\": \"image/jpeg\",\n  \"tamanioBytes\": 1024000,\n  \"principal\": true,\n  \"descripcion\": \"Sala de estar amplia con ventanales y vista a la ciudad\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/imagenes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "imagenes"]
+            }
+          }
+        },
+        {
+          "name": "POST Registrar Imagen 2 - Propiedad 1 (dormitorio)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propiedadId\": 1,\n  \"url\": \"https://images.inmobiliaria.cl/propiedades/1/dormitorio.jpg\",\n  \"nombre\": \"dormitorio.jpg\",\n  \"tipoMime\": \"image/jpeg\",\n  \"tamanioBytes\": 896000,\n  \"principal\": false,\n  \"descripcion\": \"Dormitorio principal con closet empotrado\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/imagenes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "imagenes"]
+            }
+          }
+        },
+        {
+          "name": "POST Registrar Imagen 3 - Propiedad 2 (fachada, principal)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propiedadId\": 2,\n  \"url\": \"https://images.inmobiliaria.cl/propiedades/2/fachada.jpg\",\n  \"nombre\": \"fachada.jpg\",\n  \"tipoMime\": \"image/jpeg\",\n  \"tamanioBytes\": 1536000,\n  \"principal\": true,\n  \"descripcion\": \"Fachada exterior de la casa con jardin y entrada vehicular\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/imagenes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "imagenes"]
+            }
+          }
+        },
+        {
+          "name": "GET Listar todas las imagenes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/imagenes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "imagenes"]
+            }
+          }
+        },
+        {
+          "name": "GET por ID - Imagen 1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/imagenes/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "imagenes", "1"]
+            }
+          }
+        },
+        {
+          "name": "GET por Propiedad - Imagenes de Propiedad 1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/imagenes/propiedad/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "imagenes", "propiedad", "1"]
+            }
+          }
+        },
+        {
+          "name": "GET Principal - Imagen principal de Propiedad 1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/imagenes/propiedad/1/principal",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "imagenes", "propiedad", "1", "principal"]
+            }
+          }
+        },
+        {
+          "name": "GET Principal - Imagen principal de Propiedad 2",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/imagenes/propiedad/2/principal",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "imagenes", "propiedad", "2", "principal"]
+            }
+          }
+        },
+        {
+          "name": "PATCH Establecer Principal - Imagen 2 (dormitorio)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/imagenes/2/principal",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "imagenes", "2", "principal"]
+            }
+          }
+        },
+        {
+          "name": "DELETE Eliminar - Imagen 2",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/imagenes/2",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "imagenes", "2"]
+            }
+          }
+        },
+        {
+          "name": "DELETE Eliminar TODAS las imagenes de Propiedad 2",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/imagenes/propiedad/2",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "imagenes", "propiedad", "2"]
+            }
+          }
+        },
+        {
+          "name": "[NOK] POST Registrar - sin URL (400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"propiedadId\": 1,\n  \"nombre\": \"sin-url.jpg\",\n  \"principal\": false\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/imagenes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "imagenes"]
+            }
+          }
+        }
+      ]
+    },
+
+    {
+      "name": "9. Reporte Service",
+      "item": [
+        {
+          "name": "GET Historial - todos los reportes generados",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reportes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "reportes"]
+            }
+          }
+        },
+        {
+          "name": "GET Generar Reporte Propiedades (guarda en historial)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reportes/propiedades",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "reportes", "propiedades"]
+            }
+          }
+        },
+        {
+          "name": "GET Generar Reporte Reservas (guarda en historial)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reportes/reservas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "reportes", "reservas"]
+            }
+          }
+        },
+        {
+          "name": "GET Generar Reporte General - propiedades + reservas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reportes/general",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "reportes", "general"]
+            }
+          }
+        },
+        {
+          "name": "GET por ID - Reporte 1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reportes/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "reportes", "1"]
+            }
+          }
+        },
+        {
+          "name": "GET por ID - Reporte 2",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reportes/2",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "reportes", "2"]
+            }
+          }
+        },
+        {
+          "name": "DELETE Eliminar - Reporte 1 del historial",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reportes/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "reportes", "1"]
+            }
+          }
+        },
+        {
+          "name": "[NOK] GET por ID - Reporte inexistente (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/reportes/999",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "reportes", "999"]
+            }
+          }
+        }
+      ]
+    }
+
+  ]
+}
