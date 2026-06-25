@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Calibri, Arial, sans-serif;
+            font-size: 11pt;
+            margin: 2.5cm;
+            color: #222;
+            line-height: 1.5;
+        }
+        h1 {
+            font-size: 20pt;
+            color: #1F3864;
+            text-align: center;
+            border-bottom: 3px solid #1F3864;
+            padding-bottom: 10px;
+            margin-bottom: 5px;
+        }
+        .subtitulo {
+            text-align: center;
+            color: #555;
+            font-size: 10pt;
+            margin-bottom: 30px;
+        }
+        h2 {
+            font-size: 14pt;
+            color: #1F3864;
+            border-left: 5px solid #2E75B6;
+            padding-left: 10px;
+            margin-top: 30px;
+        }
+        h3 {
+            font-size: 12pt;
+            color: #2E75B6;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+        p {
+            margin: 6px 0;
+            text-align: justify;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 10px 0 20px 0;
+            font-size: 10pt;
+        }
+        th {
+            background-color: #2E75B6;
+            color: white;
+            padding: 8px 10px;
+            text-align: left;
+        }
+        td {
+            border: 1px solid #ccc;
+            padding: 7px 10px;
+        }
+        tr:nth-child(even) {
+            background-color: #EBF3FB;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 9pt;
+            font-weight: bold;
+            color: white;
+        }
+        .badge-get    { background-color: #28a745; }
+        .badge-post   { background-color: #007bff; }
+        .badge-put    { background-color: #fd7e14; }
+        .badge-patch  { background-color: #6f42c1; }
+        .badge-delete { background-color: #dc3545; }
+        .puerto {
+            background-color: #1F3864;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 9pt;
+            font-weight: bold;
+        }
+        .arquitectura {
+            background-color: #F0F4FF;
+            border: 1px solid #2E75B6;
+            border-radius: 6px;
+            padding: 15px 20px;
+            margin: 15px 0;
+            font-size: 10pt;
+        }
+        .nota {
+            background-color: #FFF8E1;
+            border-left: 4px solid #FFC107;
+            padding: 10px 15px;
+            margin: 10px 0;
+            font-size: 10pt;
+        }
+        .separador {
+            border: none;
+            border-top: 1px solid #ccc;
+            margin: 25px 0;
+        }
+        ul {
+            margin: 5px 0;
+            padding-left: 20px;
+        }
+        li {
+            margin: 3px 0;
+        }
+        .portada-tabla {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+        .portada-tabla td {
+            border: none;
+            padding: 4px 10px;
+        }
+        code {
+            background-color: #F4F4F4;
+            border: 1px solid #ddd;
+            padding: 1px 5px;
+            border-radius: 3px;
+            font-family: Consolas, monospace;
+            font-size: 9.5pt;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ==================== PORTADA ==================== -->
+<h1>Sistema Inmobiliario — Arquitectura de Microservicios</h1>
+<p class="subtitulo">Documentación técnica de los microservicios del sistema de arriendo de propiedades</p>
+
+<table class="portada-tabla">
+    <tr>
+        <td><strong>Proyecto:</strong></td>
+        <td>inmobiliaria-microservicios</td>
+        <td><strong>Versión:</strong></td>
+        <td>0.0.1-SNAPSHOT</td>
+    </tr>
+    <tr>
+        <td><strong>Framework:</strong></td>
+        <td>Spring Boot 3.2.5 + Spring Cloud</td>
+        <td><strong>Base de datos:</strong></td>
+        <td>MySQL 8</td>
+    </tr>
+    <tr>
+        <td><strong>Repositorio:</strong></td>
+        <td>github.com/robustam/inmobiliaria-microservicios</td>
+        <td><strong>Fecha:</strong></td>
+        <td>Mayo 2026</td>
+    </tr>
+</table>
+
+<hr class="separador">
+
+<!-- ==================== INTRODUCCIÓN ==================== -->
+<h2>1. ¿Qué es una arquitectura de microservicios?</h2>
+
+<p>
+    Una arquitectura de microservicios divide una aplicación grande en servicios pequeños e independientes,
+    donde cada uno tiene una responsabilidad específica, su propia base de datos y se comunica con los demás
+    a través de HTTP (APIs REST).
+</p>
+
+<div class="arquitectura">
+    <strong>Flujo general del sistema:</strong><br><br>
+    Cliente (Postman / App) → <strong>API Gateway :8080</strong> → [redirecciona según la URL] → Microservicio destino<br><br>
+    Cada microservicio se registra en <strong>Eureka :8761</strong> al iniciar, para que el Gateway pueda encontrarlo.
+</div>
+
+<div class="nota">
+    <strong>Nota:</strong> Todos los microservicios comparten el mismo patrón de arquitectura interna:
+    <strong>Controller → Service → Repository</strong> (Controlador recibe la petición, Service aplica la lógica
+    de negocio, Repository accede a la base de datos).
+</div>
+
+<hr class="separador">
+
+<!-- ==================== INFRAESTRUCTURA ==================== -->
+<h2>2. Servicios de Infraestructura</h2>
+
+<h3>2.1 Eureka Server — Servidor de Descubrimiento</h3>
+<p><span class="puerto">Puerto: 8761</span></p>
+<p>
+    Es el directorio central del sistema. Cada microservicio al iniciar se registra aquí con su nombre y dirección IP.
+    El API Gateway consulta Eureka para saber dónde está cada servicio antes de redirigir una petición.
+    Sin Eureka, los servicios no pueden encontrarse entre sí.
+</p>
+<ul>
+    <li>Consola web de administración: <code>http://localhost:8761</code></li>
+    <li>Muestra qué servicios están activos en tiempo real</li>
+</ul>
+
+<h3>2.2 API Gateway — Puerta de Entrada</h3>
+<p><span class="puerto">Puerto: 8080</span></p>
+<p>
+    Es el único punto de entrada del sistema. Todos los clientes (Postman, aplicación web, app móvil)
+    siempre envían sus peticiones al Gateway. Este analiza la URL y la redirige al microservicio
+    correspondiente usando la lista de rutas configuradas.
+</p>
+<table>
+    <tr>
+        <th>URL recibida</th>
+        <th>Redirige a</th>
+    </tr>
+    <tr><td><code>/api/v1/auth/**</code></td><td>auth-service :8081</td></tr>
+    <tr><td><code>/api/v1/usuarios/**</code></td><td>usuario-service :8082</td></tr>
+    <tr><td><code>/api/v1/propiedades/**</code></td><td>propiedad-service :8086</td></tr>
+    <tr><td><code>/api/v1/reservas/**</code></td><td>reserva-service :8083</td></tr>
+    <tr><td><code>/api/v1/resenas/**</code></td><td>resena-service :8084</td></tr>
+    <tr><td><code>/api/v1/reportes/**</code></td><td>reporte-service :8085</td></tr>
+    <tr><td><code>/api/v1/notificaciones/**</code></td><td>notificacion-service :8087</td></tr>
+    <tr><td><code>/api/v1/imagenes/**</code></td><td>imagen-service :8088</td></tr>
+    <tr><td><code>/api/v1/busqueda/**</code></td><td>busqueda-service :8089</td></tr>
+</table>
+
+<hr class="separador">
+
+<!-- ==================== MICROSERVICIOS ==================== -->
+<h2>3. Microservicios de Negocio</h2>
+
+<!-- AUTH -->
+<h3>3.1 Auth Service — Autenticación y Seguridad</h3>
+<p><span class="puerto">Puerto: 8081</span> &nbsp; Base de datos: <code>auth_db</code></p>
+
+<p>
+    Es el microservicio encargado de la seguridad del sistema. Gestiona el registro de usuarios,
+    el inicio de sesión y la generación de tokens JWT (JSON Web Token). Cuando un usuario inicia sesión,
+    recibe un token que identifica quién es y qué rol tiene dentro del sistema.
+</p>
+
+<p><strong>¿Qué hace?</strong></p>
+<ul>
+    <li>Registrar nuevos usuarios con username, email y contraseña (encriptada con BCrypt)</li>
+    <li>Validar credenciales al hacer login y generar un token JWT con duración de 24 horas</li>
+    <li>Verificar si un token JWT es válido (usado por el Gateway)</li>
+</ul>
+
+<p><strong>Roles disponibles:</strong> <code>USER</code>, <code>ADMIN</code>, <code>PROPIETARIO</code></p>
+
+<table>
+    <tr><th>Método</th><th>Endpoint</th><th>Descripción</th></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td><code>/api/v1/auth/register</code></td><td>Registrar nuevo usuario</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td><code>/api/v1/auth/login</code></td><td>Iniciar sesión y obtener token JWT</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/auth/validate?token=...</code></td><td>Validar si un token es válido</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/auth/health</code></td><td>Verificar estado del servicio</td></tr>
+</table>
+
+<!-- USUARIO -->
+<h3>3.2 Usuario Service — Gestión de Perfiles</h3>
+<p><span class="puerto">Puerto: 8082</span> &nbsp; Base de datos: <code>usuario_db</code></p>
+
+<p>
+    Almacena el perfil completo de los usuarios del sistema: su nombre, apellido, email, teléfono y ciudad.
+    Es diferente al auth-service: mientras auth-service guarda las credenciales de acceso (username y contraseña),
+    usuario-service guarda los datos personales del usuario.
+</p>
+
+<p><strong>¿Qué hace?</strong></p>
+<ul>
+    <li>Crear y actualizar perfiles de usuarios</li>
+    <li>Buscar usuarios por ID, email o ciudad</li>
+    <li>Borrado lógico: al "eliminar" un usuario, solo se marca como inactivo (<code>activo=false</code>), el registro no se borra</li>
+</ul>
+
+<table>
+    <tr><th>Método</th><th>Endpoint</th><th>Descripción</th></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/usuarios</code></td><td>Listar usuarios activos</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/usuarios/{id}</code></td><td>Buscar por ID</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/usuarios/email/{email}</code></td><td>Buscar por email</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/usuarios/ciudad/{ciudad}</code></td><td>Buscar por ciudad</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td><code>/api/v1/usuarios</code></td><td>Crear usuario</td></tr>
+    <tr><td><span class="badge badge-put">PUT</span></td><td><code>/api/v1/usuarios/{id}</code></td><td>Actualizar usuario</td></tr>
+    <tr><td><span class="badge badge-delete">DELETE</span></td><td><code>/api/v1/usuarios/{id}</code></td><td>Desactivar usuario (borrado lógico)</td></tr>
+</table>
+
+<!-- PROPIEDAD -->
+<h3>3.3 Propiedad Service — Gestión de Propiedades</h3>
+<p><span class="puerto">Puerto: 8086</span> &nbsp; Base de datos: <code>propiedad_db</code></p>
+
+<p>
+    Es el núcleo del sistema inmobiliario. Gestiona todas las propiedades disponibles para arriendo.
+    Solo maneja dos tipos de propiedad: casas y departamentos. Cada propiedad tiene un ciclo de vida
+    con tres estados posibles.
+</p>
+
+<p><strong>Tipos:</strong> <code>CASA</code>, <code>DEPARTAMENTO</code></p>
+<p><strong>Estados:</strong> <code>DISPONIBLE</code> → puede reservarse | <code>ARRENDADA</code> → ocupada | <code>INACTIVA</code> → desactivada</p>
+
+<p><strong>¿Qué hace?</strong></p>
+<ul>
+    <li>Publicar nuevas propiedades con sus características (habitaciones, metros cuadrados, precio, ubicación)</li>
+    <li>Buscar propiedades con filtros: tipo, ciudad, región, comuna, precio mínimo y máximo</li>
+    <li>Cambiar el estado de una propiedad (usado por reserva-service automáticamente)</li>
+    <li>Borrado lógico: eliminar cambia el estado a INACTIVA, no borra el registro</li>
+</ul>
+
+<table>
+    <tr><th>Método</th><th>Endpoint</th><th>Descripción</th></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/propiedades</code></td><td>Listar propiedades DISPONIBLES</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/propiedades/todas</code></td><td>Listar todas (incluye ARRENDADA e INACTIVA)</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/propiedades/{id}</code></td><td>Buscar por ID</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/propiedades/buscar?tipo=&ciudad=&precioMax=</code></td><td>Búsqueda avanzada con filtros</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/propiedades/region/{region}</code></td><td>Filtrar por región</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/propiedades/comuna/{comuna}</code></td><td>Filtrar por comuna</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/propiedades/propietario/{id}</code></td><td>Propiedades de un propietario</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td><code>/api/v1/propiedades</code></td><td>Crear propiedad</td></tr>
+    <tr><td><span class="badge badge-put">PUT</span></td><td><code>/api/v1/propiedades/{id}</code></td><td>Actualizar propiedad</td></tr>
+    <tr><td><span class="badge badge-patch">PATCH</span></td><td><code>/api/v1/propiedades/{id}/estado?estado=</code></td><td>Cambiar estado</td></tr>
+    <tr><td><span class="badge badge-delete">DELETE</span></td><td><code>/api/v1/propiedades/{id}</code></td><td>Desactivar propiedad</td></tr>
+</table>
+
+<!-- RESERVA -->
+<h3>3.4 Reserva Service — Gestión de Arriendos</h3>
+<p><span class="puerto">Puerto: 8083</span> &nbsp; Base de datos: <code>reserva_db</code></p>
+
+<p>
+    Gestiona el proceso completo del arriendo de una propiedad. Cuando se crea una reserva,
+    automáticamente verifica que la propiedad esté disponible y la marca como arrendada.
+    Cuando se cancela o completa, la propiedad vuelve a estar disponible.
+    Esta comunicación se realiza mediante llamadas HTTP internas a propiedad-service usando Feign.
+</p>
+
+<p><strong>Estados de la reserva:</strong> <code>PENDIENTE</code> → <code>CONFIRMADA</code> → <code>COMPLETADA</code> / <code>CANCELADA</code></p>
+
+<p><strong>¿Qué hace?</strong></p>
+<ul>
+    <li>Crear reservas validando que la propiedad esté en estado DISPONIBLE</li>
+    <li>Cambiar automáticamente el estado de la propiedad a ARRENDADA al crear una reserva</li>
+    <li>Liberar la propiedad (volver a DISPONIBLE) al cancelar o completar la reserva</li>
+    <li>Consultar reservas por usuario o por propiedad</li>
+</ul>
+
+<div class="nota">
+    <strong>Integración importante:</strong> Reserva-service llama a propiedad-service internamente
+    via Feign (HTTP) para verificar el estado y cambiar el estado de la propiedad.
+    Utiliza OkHttp como cliente HTTP para soportar el método PATCH.
+</div>
+
+<table>
+    <tr><th>Método</th><th>Endpoint</th><th>Descripción</th></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/reservas</code></td><td>Listar todas las reservas</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/reservas/{id}</code></td><td>Buscar reserva por ID</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/reservas/usuario/{id}</code></td><td>Reservas de un usuario</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/reservas/propiedad/{id}</code></td><td>Reservas de una propiedad</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td><code>/api/v1/reservas</code></td><td>Crear reserva</td></tr>
+    <tr><td><span class="badge badge-patch">PATCH</span></td><td><code>/api/v1/reservas/{id}/estado?estado=</code></td><td>Cambiar estado de la reserva</td></tr>
+    <tr><td><span class="badge badge-delete">DELETE</span></td><td><code>/api/v1/reservas/{id}</code></td><td>Eliminar reserva</td></tr>
+</table>
+
+<!-- RESENA -->
+<h3>3.5 Reseña Service — Calificaciones de Propiedades</h3>
+<p><span class="puerto">Puerto: 8084</span> &nbsp; Base de datos: <code>resena_db</code></p>
+
+<p>
+    Permite a los usuarios calificar y comentar las propiedades que han arrendado.
+    La calificación va de 1 a 5 estrellas. El servicio también calcula estadísticas
+    como el promedio de calificaciones y la cantidad total de reseñas por propiedad.
+    Verifica que la propiedad exista llamando a propiedad-service antes de crear una reseña.
+</p>
+
+<p><strong>¿Qué hace?</strong></p>
+<ul>
+    <li>Crear reseñas con calificación (1-5) y comentario de hasta 1000 caracteres</li>
+    <li>Calcular el promedio de calificaciones de una propiedad</li>
+    <li>Consultar reseñas por propiedad o por usuario</li>
+    <li>Actualizar y eliminar reseñas propias</li>
+</ul>
+
+<table>
+    <tr><th>Método</th><th>Endpoint</th><th>Descripción</th></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/resenas</code></td><td>Listar todas las reseñas</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/resenas/{id}</code></td><td>Buscar reseña por ID</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/resenas/propiedad/{id}</code></td><td>Reseñas de una propiedad</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/resenas/propiedad/{id}/estadisticas</code></td><td>Promedio y total de reseñas</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/resenas/usuario/{id}</code></td><td>Reseñas de un usuario</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td><code>/api/v1/resenas</code></td><td>Crear reseña</td></tr>
+    <tr><td><span class="badge badge-put">PUT</span></td><td><code>/api/v1/resenas/{id}</code></td><td>Actualizar reseña</td></tr>
+    <tr><td><span class="badge badge-delete">DELETE</span></td><td><code>/api/v1/resenas/{id}</code></td><td>Eliminar reseña</td></tr>
+</table>
+
+<!-- BUSQUEDA -->
+<h3>3.6 Búsqueda Service — Motor de Búsqueda</h3>
+<p><span class="puerto">Puerto: 8089</span> &nbsp; Base de datos: <strong>ninguna propia</strong></p>
+
+<p>
+    Es un servicio especial que no tiene base de datos propia. Actúa como un intermediario inteligente
+    que consulta los datos de propiedad-service y aplica filtros adicionales que ese servicio no soporta,
+    como filtrar por número mínimo de habitaciones o metros cuadrados mínimos.
+    Está diseñado para alimentar el buscador principal de la aplicación.
+</p>
+
+<p><strong>¿Qué hace?</strong></p>
+<ul>
+    <li>Buscar propiedades disponibles con múltiples filtros: tipo, ciudad, región, comuna, precio, habitaciones, metros cuadrados</li>
+    <li>Retornar todas las propiedades disponibles sin filtros</li>
+    <li>Retornar las 10 propiedades más recientes como "propiedades destacadas" para la portada</li>
+</ul>
+
+<table>
+    <tr><th>Método</th><th>Endpoint</th><th>Descripción</th></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/busqueda?tipo=&ciudad=&precioMax=&habitacionesMin=</code></td><td>Búsqueda avanzada con filtros</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/busqueda/disponibles</code></td><td>Todas las propiedades disponibles</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/busqueda/destacadas</code></td><td>Top 10 propiedades destacadas</td></tr>
+</table>
+
+<!-- NOTIFICACION -->
+<h3>3.7 Notificación Service — Sistema de Avisos</h3>
+<p><span class="puerto">Puerto: 8087</span> &nbsp; Base de datos: <code>notificacion_db</code></p>
+
+<p>
+    Gestiona las notificaciones internas del sistema hacia los usuarios. Permite enviar avisos
+    sobre reservas, reseñas, pagos y mensajes del sistema. Lleva el control de qué notificaciones
+    han sido leídas y cuáles están pendientes, mostrando un contador de no leídas.
+</p>
+
+<p><strong>Tipos de notificación:</strong> <code>RESERVA</code>, <code>RESENA</code>, <code>SISTEMA</code>, <code>PAGO</code>, <code>BIENVENIDA</code></p>
+
+<p><strong>¿Qué hace?</strong></p>
+<ul>
+    <li>Crear notificaciones para usuarios específicos</li>
+    <li>Listar notificaciones de un usuario (todas o solo no leídas)</li>
+    <li>Marcar una o todas las notificaciones como leídas</li>
+    <li>Mostrar el resumen con el conteo de notificaciones no leídas</li>
+</ul>
+
+<table>
+    <tr><th>Método</th><th>Endpoint</th><th>Descripción</th></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/notificaciones?usuarioId=</code></td><td>Todas las notificaciones del usuario</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/notificaciones/no-leidas?usuarioId=</code></td><td>Solo notificaciones no leídas</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/notificaciones/resumen?usuarioId=</code></td><td>Conteo de no leídas</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/notificaciones/{id}</code></td><td>Buscar notificación por ID</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td><code>/api/v1/notificaciones</code></td><td>Crear notificación</td></tr>
+    <tr><td><span class="badge badge-patch">PATCH</span></td><td><code>/api/v1/notificaciones/{id}/leer</code></td><td>Marcar una como leída</td></tr>
+    <tr><td><span class="badge badge-patch">PATCH</span></td><td><code>/api/v1/notificaciones/leer-todas?usuarioId=</code></td><td>Marcar todas como leídas</td></tr>
+    <tr><td><span class="badge badge-delete">DELETE</span></td><td><code>/api/v1/notificaciones/{id}</code></td><td>Eliminar notificación</td></tr>
+</table>
+
+<!-- IMAGEN -->
+<h3>3.8 Imagen Service — Gestión de Fotografías</h3>
+<p><span class="puerto">Puerto: 8088</span> &nbsp; Base de datos: <code>imagen_db</code></p>
+
+<p>
+    Administra las imágenes asociadas a cada propiedad. Almacena la URL de la imagen,
+    su tipo de archivo y tamaño. Gestiona cuál imagen es la "principal" de cada propiedad,
+    garantizando que solo una imagen pueda ser la principal a la vez.
+    Cuando se cambia la imagen principal, automáticamente desactiva la anterior.
+</p>
+
+<p><strong>¿Qué hace?</strong></p>
+<ul>
+    <li>Registrar imágenes de propiedades con su URL, tipo MIME y tamaño en bytes</li>
+    <li>Gestionar la imagen principal de cada propiedad (solo puede haber una)</li>
+    <li>Listar imágenes de una propiedad ordenadas: principal primero, luego por fecha</li>
+    <li>Eliminar imágenes individualmente o todas las de una propiedad</li>
+</ul>
+
+<table>
+    <tr><th>Método</th><th>Endpoint</th><th>Descripción</th></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/imagenes</code></td><td>Listar todas las imágenes</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/imagenes/{id}</code></td><td>Buscar imagen por ID</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/imagenes/propiedad/{id}</code></td><td>Imágenes de una propiedad</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/imagenes/propiedad/{id}/principal</code></td><td>Imagen principal de la propiedad</td></tr>
+    <tr><td><span class="badge badge-post">POST</span></td><td><code>/api/v1/imagenes</code></td><td>Agregar imagen</td></tr>
+    <tr><td><span class="badge badge-patch">PATCH</span></td><td><code>/api/v1/imagenes/{id}/principal</code></td><td>Cambiar imagen principal</td></tr>
+    <tr><td><span class="badge badge-delete">DELETE</span></td><td><code>/api/v1/imagenes/{id}</code></td><td>Eliminar imagen</td></tr>
+    <tr><td><span class="badge badge-delete">DELETE</span></td><td><code>/api/v1/imagenes/propiedad/{id}</code></td><td>Eliminar todas las imágenes de una propiedad</td></tr>
+</table>
+
+<!-- REPORTE -->
+<h3>3.9 Reporte Service — Generación de Reportes</h3>
+<p><span class="puerto">Puerto: 8085</span> &nbsp; Base de datos: <code>reporte_db</code></p>
+
+<p>
+    Genera reportes estadísticos del sistema consultando datos de otros microservicios.
+    Llama a propiedad-service para obtener datos de propiedades y a reserva-service para
+    datos de reservas. Los reportes generados se guardan en la base de datos para mantener
+    un historial y poder consultarlos posteriormente.
+</p>
+
+<p><strong>Tipos de reporte:</strong> <code>PROPIEDADES</code>, <code>RESERVAS</code>, <code>INGRESOS</code>, <code>GENERAL</code></p>
+
+<p><strong>¿Qué hace?</strong></p>
+<ul>
+    <li>Generar reporte de propiedades: estadísticas por estado, tipo y ciudad</li>
+    <li>Generar reporte de reservas: estadísticas por estado y cálculo de ingresos totales de reservas completadas</li>
+    <li>Generar reporte general: combina datos de propiedades y reservas</li>
+    <li>Consultar el historial de reportes generados (del más reciente al más antiguo)</li>
+</ul>
+
+<table>
+    <tr><th>Método</th><th>Endpoint</th><th>Descripción</th></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/reportes</code></td><td>Historial de reportes generados</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/reportes/{id}</code></td><td>Buscar reporte por ID</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/reportes/propiedades</code></td><td>Generar reporte de propiedades</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/reportes/reservas</code></td><td>Generar reporte de reservas</td></tr>
+    <tr><td><span class="badge badge-get">GET</span></td><td><code>/api/v1/reportes/general</code></td><td>Generar reporte general</td></tr>
+    <tr><td><span class="badge badge-delete">DELETE</span></td><td><code>/api/v1/reportes/{id}</code></td><td>Eliminar reporte</td></tr>
+</table>
+
+<hr class="separador">
+
+<!-- ==================== COMUNICACION ==================== -->
+<h2>4. Comunicación entre Microservicios</h2>
+
+<p>
+    Algunos microservicios necesitan datos de otros para funcionar. Esta comunicación se realiza
+    mediante <strong>OpenFeign</strong>, una librería que permite llamar a otros servicios HTTP
+    como si fueran métodos Java normales.
+</p>
+
+<table>
+    <tr>
+        <th>Servicio origen</th>
+        <th>Llama a</th>
+        <th>Para qué</th>
+    </tr>
+    <tr>
+        <td>reserva-service</td>
+        <td>propiedad-service</td>
+        <td>Verificar que la propiedad esté DISPONIBLE y cambiar su estado</td>
+    </tr>
+    <tr>
+        <td>resena-service</td>
+        <td>propiedad-service</td>
+        <td>Verificar que la propiedad exista antes de crear una reseña</td>
+    </tr>
+    <tr>
+        <td>busqueda-service</td>
+        <td>propiedad-service</td>
+        <td>Obtener propiedades y aplicar filtros adicionales</td>
+    </tr>
+    <tr>
+        <td>reporte-service</td>
+        <td>propiedad-service</td>
+        <td>Obtener datos de propiedades para generar reportes</td>
+    </tr>
+    <tr>
+        <td>reporte-service</td>
+        <td>reserva-service</td>
+        <td>Obtener datos de reservas para generar reportes</td>
+    </tr>
+</table>
+
+<hr class="separador">
+
+<!-- ==================== ERRORES ==================== -->
+<h2>5. Manejo de Errores</h2>
+
+<p>
+    Todos los microservicios implementan un <code>GlobalExceptionHandler</code> que captura
+    las excepciones y devuelve respuestas JSON estructuradas con el mismo formato en todos los servicios.
+</p>
+
+<table>
+    <tr>
+        <th>Código HTTP</th>
+        <th>Código interno</th>
+        <th>Cuándo ocurre</th>
+    </tr>
+    <tr><td>200 OK</td><td>—</td><td>Operación exitosa</td></tr>
+    <tr><td>201 Created</td><td>—</td><td>Recurso creado exitosamente</td></tr>
+    <tr><td>400 Bad Request</td><td>VALIDATION_ERROR</td><td>Campos inválidos o faltantes (@Valid)</td></tr>
+    <tr><td>400 Bad Request</td><td>BAD_REQUEST</td><td>Regla de negocio violada (ej: propiedad no disponible)</td></tr>
+    <tr><td>404 Not Found</td><td>NOT_FOUND</td><td>Recurso no encontrado (ej: propiedad con id 9999)</td></tr>
+    <tr><td>500 Internal Server Error</td><td>SERVER_ERROR</td><td>Error inesperado del servidor</td></tr>
+</table>
+
+<p><strong>Formato de respuesta de error (siempre el mismo en todos los servicios):</strong></p>
+<div class="arquitectura">
+    <code>
+        {<br>
+        &nbsp;&nbsp;"codigo": "NOT_FOUND",<br>
+        &nbsp;&nbsp;"mensaje": "Propiedad no encontrada con id: 9999",<br>
+        &nbsp;&nbsp;"timestamp": "2026-05-25T03:00:00.000"<br>
+        }
+    </code>
+</div>
+
+<hr class="separador">
+
+<!-- ==================== TECNOLOGIAS ==================== -->
+<h2>6. Tecnologías Utilizadas</h2>
+
+<table>
+    <tr><th>Tecnología</th><th>Versión</th><th>Para qué se usa</th></tr>
+    <tr><td>Spring Boot</td><td>3.2.5</td><td>Framework base de cada microservicio</td></tr>
+    <tr><td>Spring Cloud</td><td>2023.0.1</td><td>Eureka, Gateway y Feign</td></tr>
+    <tr><td>Spring Data JPA</td><td>—</td><td>Acceso a base de datos con Hibernate</td></tr>
+    <tr><td>Spring Security</td><td>6.x</td><td>Seguridad en auth-service</td></tr>
+    <tr><td>MySQL</td><td>8</td><td>Base de datos relacional de cada servicio</td></tr>
+    <tr><td>Lombok</td><td>—</td><td>Reducir código repetitivo (getters, setters, constructores)</td></tr>
+    <tr><td>JJWT</td><td>—</td><td>Generación y validación de tokens JWT</td></tr>
+    <tr><td>BCrypt</td><td>—</td><td>Encriptación de contraseñas</td></tr>
+    <tr><td>OkHttp (Feign)</td><td>—</td><td>Cliente HTTP que soporta método PATCH en reserva-service</td></tr>
+    <tr><td>Jakarta Validation</td><td>—</td><td>Validación de datos de entrada (@NotBlank, @Email, etc.)</td></tr>
+</table>
+
+<hr class="separador">
+
+<p style="text-align:center; color:#888; font-size:9pt;">
+    Documentación generada — Sistema Inmobiliario Microservicios — Mayo 2026
+</p>
+
+</body>
+</html>
