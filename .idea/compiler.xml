@@ -2,6 +2,7 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -11,20 +12,12 @@
         <module name="busqueda-service" />
         <module name="propiedad-service" />
         <module name="resena-service" />
+        <module name="auth-service" />
         <module name="imagen-service" />
         <module name="notificacion-service" />
         <module name="api-gateway" />
         <module name="server_eureka" />
         <module name="reporte-service" />
-      </profile>
-      <profile name="Annotation profile for inmobiliaria-microservicios-parent" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <processorPath useClasspath="false">
-          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.44/lombok-1.18.44.jar" />
-        </processorPath>
-        <module name="auth-service" />
       </profile>
     </annotationProcessing>
   </component>

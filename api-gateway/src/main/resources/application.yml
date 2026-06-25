@@ -1,0 +1,141 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    loadbalancer:
+      eureka:
+        enabled: true
+    gateway:
+      routes:
+        # Rutas para la documentación de OpenAPI/Swagger
+        - id: openapi-auth
+          uri: lb://auth-service
+          predicates:
+            - Path=/v3/api-docs/auth-service
+          filters:
+            - RewritePath=/v3/api-docs/auth-service, /v3/api-docs
+        - id: openapi-usuario
+          uri: lb://usuario-service
+          predicates:
+            - Path=/v3/api-docs/usuario-service
+          filters:
+            - RewritePath=/v3/api-docs/usuario-service, /v3/api-docs
+        - id: openapi-propiedad
+          uri: lb://propiedad-service
+          predicates:
+            - Path=/v3/api-docs/propiedad-service
+          filters:
+            - RewritePath=/v3/api-docs/propiedad-service, /v3/api-docs
+        - id: openapi-reserva
+          uri: lb://reserva-service
+          predicates:
+            - Path=/v3/api-docs/reserva-service
+          filters:
+            - RewritePath=/v3/api-docs/reserva-service, /v3/api-docs
+        - id: openapi-resena
+          uri: lb://resena-service
+          predicates:
+            - Path=/v3/api-docs/resena-service
+          filters:
+            - RewritePath=/v3/api-docs/resena-service, /v3/api-docs
+        - id: openapi-busqueda
+          uri: lb://busqueda-service
+          predicates:
+            - Path=/v3/api-docs/busqueda-service
+          filters:
+            - RewritePath=/v3/api-docs/busqueda-service, /v3/api-docs
+        - id: openapi-notificacion
+          uri: lb://notificacion-service
+          predicates:
+            - Path=/v3/api-docs/notificacion-service
+          filters:
+            - RewritePath=/v3/api-docs/notificacion-service, /v3/api-docs
+        - id: openapi-imagen
+          uri: lb://imagen-service
+          predicates:
+            - Path=/v3/api-docs/imagen-service
+          filters:
+            - RewritePath=/v3/api-docs/imagen-service, /v3/api-docs
+        - id: openapi-reporte
+          uri: lb://reporte-service
+          predicates:
+            - Path=/v3/api-docs/reporte-service
+          filters:
+            - RewritePath=/v3/api-docs/reporte-service, /v3/api-docs
+        # Rutas para la API principal
+        - id: api-auth
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/v1/auth/**
+        - id: api-usuario
+          uri: lb://usuario-service
+          predicates:
+            - Path=/api/v1/usuarios/**
+        - id: api-propiedad
+          uri: lb://propiedad-service
+          predicates:
+            - Path=/api/v1/propiedades/**
+        - id: api-reserva
+          uri: lb://reserva-service
+          predicates:
+            - Path=/api/v1/reservas/**
+        - id: api-resena
+          uri: lb://resena-service
+          predicates:
+            - Path=/api/v1/resenas/**
+        - id: api-busqueda
+          uri: lb://busqueda-service
+          predicates:
+            - Path=/api/v1/busqueda/**
+        - id: api-notificacion
+          uri: lb://notificacion-service
+          predicates:
+            - Path=/api/v1/notificaciones/**
+        - id: api-imagen
+          uri: lb://imagen-service
+          predicates:
+            - Path=/api/v1/imagenes/**
+        - id: api-reporte
+          uri: lb://reporte-service
+          predicates:
+            - Path=/api/v1/reportes/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+jwt:
+  secret: unaClaveSecretaMuyLargaParaQueSeaSegura123456
+
+springdoc:
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    urls:
+      - name: auth-service
+        url: /v3/api-docs/auth-service
+      - name: usuario-service
+        url: /v3/api-docs/usuario-service
+      - name: propiedad-service
+        url: /v3/api-docs/propiedad-service
+      - name: reserva-service
+        url: /v3/api-docs/reserva-service
+      - name: resena-service
+        url: /v3/api-docs/resena-service
+      - name: busqueda-service
+        url: /v3/api-docs/busqueda-service
+      - name: notificacion-service
+        url: /v3/api-docs/notificacion-service
+      - name: imagen-service
+        url: /v3/api-docs/imagen-service
+      - name: reporte-service
+        url: /v3/api-docs/reporte-service
+
+logging:
+  level:
+    org.springframework.cloud.gateway: INFO
+    com.inmobiliaria: DEBUG
